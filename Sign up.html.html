@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost & Found — Daftar</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --orange-1: #d35400;
+      --orange-2: #e67e22;
+      --deep-orange: #a04000;
+      --cream: #fff7e6;
+      --bg: #f7e6d8;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: 'Libre Baskerville', serif;
+      background: linear-gradient(90deg, var(--orange-2), #b94a1e);
+    }
+
+    /* TOP BAR PUTIH */
+    .top-bar {
+      width: 100%;
+      height: 90px;                /* sedikit lebih rendah biar rapi */
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;             /* agak dimajukan ke tengah */
+      box-shadow: 0 2px 6px rgba(0,0,0,.12);
+      position: relative;
+      z-index: 2;
+      box-sizing: border-box;
+    }
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+    .logo-wrap img {
+      height: 72px;                /* logo diperkecil supaya tombol muat */
+      width: auto;
+      flex-shrink: 0;
+    }
+    .logo-text {
+      font-size: 24px;
+      color: var(--deep-orange);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .top-actions {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .btn-top {
+      padding: 10px 24px;
+      border-radius: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      font-size: 14px;
+      cursor:pointer;
+    }
+    .btn-top.active {
+      background: var(--deep-orange);
+      color: #fff;
+    }
+    .btn-top.secondary {
+      background: transparent;
+      color: var(--deep-orange);
+    }
+
+    /* RESPONSIVE HEADER */
+    @media (max-width: 768px){
+      .top-bar{
+        padding: 0 16px;
+        height: 80px;
+      }
+      .logo-wrap img{
+        height: 54px;
+      }
+      .logo-text{
+        font-size: 20px;
+      }
+      .btn-top{
+        padding: 6px 14px;
+        font-size: 12px;
+      }
+      .top-actions{
+        gap: 10px;
+      }
+    }
+
+    /* AREA ORANYE + FORM KETENGAH */
+    .main {
+      padding: 40px 80px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: calc(100vh - 90px); /* tinggi layar dikurangi tinggi header baru */
+      box-sizing: border-box;
+    }
+
+    .register-container {
+      width: 840px;
+      max-width: 100%;
+      background: #fadfc9;
+      border-radius: 28px;
+      padding: 44px 64px;
+      box-shadow: 0 12px 30px rgba(0,0,0,.18);
+      box-sizing: border-box;
+    }
+
+    .register-title {
+      text-align: center;
+      font-size: 40px;
+      color: var(--deep-orange);
+      font-weight: 700;
+    }
+
+    .register-sub {
+      text-align: center;
+      color: #9b4020;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    .field-label {
+      display: block;
+      color: #a24b2a;
+      margin: 14px 0 6px;
+      font-size: 15px;
+    }
+
+    .input {
+      width: 100%;
+      height: 52px;
+      border-radius: 16px;
+      border: none;
+      padding: 0 18px;
+      background: linear-gradient(90deg, #f5b7b1, #f1948a);
+      color: #4d2419;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .hint-text{
+      display:block;
+      font-size:12px;
+      margin-top:4px;
+      color:#6e2c00;
+    }
+    .error-text{
+      color:#b00020;
+      font-weight:700;
+    }
+
+    .checkbox {
+      text-align: left;
+      font-size: 13px;
+      margin: 12px 0 22px;
+      color: #6e2c00;
+    }
+
+    .btn-register {
+      width: 100%;
+      height: 58px;
+      border-radius: 25px;
+      background: #f5f5dc;
+      color: #6e2c00;
+      font-size: 16px;
+      font-weight: bold;
+      border:none;
+      cursor:pointer;
+    }
+
+    .login-link {
+      margin-top: 15px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #a04000;
+      cursor: pointer;
+      text-align:center;
+    }
+
+    /* POPUP BERHASIL MASUK */
+    .success-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:999;
+    }
+    .success-card{
+      background:#d35400;
+      border-radius:32px;
+      padding:60px 80px;
+      text-align:center;
+      color:#000;
+      box-shadow:0 12px 32px rgba(0,0,0,0.35);
+    }
+    .success-icon{
+      width:130px;
+      height:130px;
+      border-radius:50%;
+      background:#2ecc71;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin:0 auto 28px;
+      font-size:70px;
+      color:#fff;
+    }
+    .success-text{
+      font-size:26px;
+      font-weight:700;
+      color:#000;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="top-bar">
+    <div class="logo-wrap">
+      <img src="LOFU KACA PEMBESAR.png" alt="Lost & Found Logo">
+      <div class="logo-text">Lost & Found</div>
+    </div>
+
+    <nav class="top-actions">
+      <a class="btn-top secondary" href="Login.html.html">MASUK</a>
+      <a class="btn-top active" href="Daftar.html">DAFTAR</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <section class="register-container">
+      <h1 class="register-title">Buat Akun Baru</h1>
+      <p class="register-sub">Daftar untuk bergabung dengan kami</p>
+
+      <form id="registerForm">
+
+        <label class="field-label" for="name">Nama Lengkap</label>
+        <input class="input" type="text" id="name" placeholder="Nama Lengkap" required>
+
+        <!-- NIM -->
+        <label class="field-label" for="nim">Nomor Induk Mahasiswa (NIM)</label>
+        <input class="input" type="text" id="nim" placeholder="Contoh: 1710xxxxxx" required>
+        <small id="nimHelp" class="hint-text">NIM harus 10 angka.</small>
+
+        <label class="field-label" for="password">Password</label>
+        <input class="input" type="password" id="password" placeholder="Password" required>
+
+        <label class="field-label" for="confirmPassword">Konfirmasi Password</label>
+        <input class="input" type="password" id="confirmPassword" placeholder="Konfirmasi Password" required>
+
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" id="terms">
+            Saya setuju dengan
+            <a href="#">Syarat dan Ketentuan</a> dan
+            <a href="#">Kebijakan Privasi</a>
+          </label>
+        </div>
+
+        <button class="btn-register" type="submit">Daftar Sekarang</button>
+      </form>
+
+      <div class="login-link" id="goToLogin">
+        Sudah punya akun? Masuk di sini
+      </div>
+    </section>
+  </main>
+
+  <!-- POPUP BERHASIL MASUK -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-card">
+      <div class="success-icon">✔</div>
+      <div class="success-text">Akun Berhasil Masuk</div>
+    </div>
+  </div>
+
+  <script>
+    const nimInput = document.getElementById('nim');
+    const nimHelp  = document.getElementById('nimHelp');
+    const overlay  = document.getElementById('successOverlay');
+
+    document.getElementById('goToLogin').addEventListener('click', function () {
+      window.location.href = 'Login.html.html';
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const nim = nimInput.value.trim();
+      const password = document.getElementById('password').value.trim();
+      const confirmPassword = document.getElementById('confirmPassword').value.trim();
+      const terms = document.getElementById('terms').checked;
+
+      // reset pesan NIM
+      nimHelp.textContent = 'NIM harus 10 angka.';
+      nimHelp.classList.remove('error-text');
+
+      if (!name || !nim || !password || !confirmPassword) {
+        alert('Harap isi semua data.');
+        return;
+      }
+
+      // hanya angka
+      if (!/^[0-9]+$/.test(nim)) {
+        nimHelp.textContent = 'NIM hanya boleh berisi angka.';
+        nimHelp.classList.add('error-text');
+        return;
+      }
+
+      // harus tepat 10 digit
+      if (nim.length !== 10) {
+        nimHelp.textContent = 'NIM harus tepat 10 angka.';
+        nimHelp.classList.add('error-text');
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert('Password dan konfirmasi password tidak sama.');
+        return;
+      }
+
+      if (!terms) {
+        alert('Harap setujui Syarat & Ketentuan terlebih dahulu.');
+        return;
+      }
+
+      // TAMPILKAN POPUP BERHASIL, LALU PINDAH KE LOGIN
+      overlay.style.display = 'flex';
+      setTimeout(function () {
+        window.location.href = 'Login.html.html';
+      }, 1800);
+    });
+  </script>
+
+</body>
+</html>
