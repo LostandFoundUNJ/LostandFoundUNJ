@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost & Found — Beranda</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --deep-orange:#a04000;
+      --orange:#e67e22;
+      --orange-strong:#d35400;
+      --soft-cream:#ffe5c9;
+      --card-cream:#fadfc9;
+    }
+
+    *{box-sizing:border-box;}
+
+    body{
+      margin:0;
+      font-family:'Libre Baskerville',serif;
+      background:linear-gradient(90deg,#e67e22,#b94a1e);
+    }
+
+    /* TOP BAR */
+    .top-bar{
+      width:100%;
+      height:110px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 40px;
+      box-shadow:0 2px 6px rgba(0,0,0,.15);
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+    .logo-wrap{
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+    .logo-wrap img{
+      height:90px;
+    }
+    .logo-text{
+      font-size:22px;
+      font-weight:700;
+      color:var(--deep-orange);
+    }
+
+    /* NAV */
+    .nav-main{
+      display:flex;
+      align-items:center;
+      gap:20px;
+      font-size:14px;
+      font-weight:700;
+      color:var(--deep-orange);
+      position:relative;
+    }
+    .nav-link{
+      text-decoration:none;
+      color:var(--deep-orange);
+    }
+    .nav-link.active{
+      color:var(--deep-orange);
+      text-decoration:underline;
+      text-underline-offset:4px;
+    }
+    .nav-icon{
+      font-size:20px;
+      cursor:pointer;
+      user-select:none;
+      position:relative;
+    }
+    .logout-btn{
+      border:none;
+      background:transparent;
+      font-size:14px;
+      font-weight:700;
+      color:var(--deep-orange);
+      cursor:pointer;
+    }
+
+    /* ==================== POPUP NOTIFIKASI ==================== */
+    .notif-popup{
+      position:absolute;
+      top:55px;
+      right:120px;
+      width:340px;
+      background:#ffb15e;
+      border-radius:12px;
+      padding:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,.35);
+      display:none;
+      z-index:101;
+    }
+    .notif-item{
+      background:rgba(255,255,255,.75);
+      font-size:12px;
+      padding:8px;
+      border-radius:6px;
+      margin-bottom:6px;
+    }
+
+    /* ==================== POPUP FAQ ==================== */
+    .faq-popup{
+      position:absolute;
+      top:55px;
+      right:70px;
+      width:340px;
+      background:#ffb15e;
+      border-radius:12px;
+      padding:12px;
+      box-shadow:0 4px 20px rgba(0,0,0,.35);
+      display:none;
+      z-index:101;
+    }
+    .faq-input{
+      width:100%;
+      border:none;
+      outline:none;
+      padding:8px;
+      border-radius:6px;
+    }
+
+    /* MAIN */
+    .main{
+      max-width:1200px;
+      margin:24px auto 90px;
+      padding:0 20px 100px;
+    }
+
+    /* BANNER */
+    .banner-row{
+      display:grid;
+      grid-template-columns:3fr 2fr;
+      gap:12px;
+      overflow:hidden;
+      border-radius:24px;
+    }
+    .banner-row img{
+      width:100%;
+      height:260px;
+      object-fit:cover;
+      border-radius:24px 0 0 24px;
+    }
+    .banner-slogan{
+      background:linear-gradient(90deg,#ffb347,#f27036);
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border-radius:0 24px 24px 0;
+    }
+    .slogan-text{
+      font-size:28px;
+      font-weight:700;
+    }
+
+    /* SEARCH BAR */
+    .search-wrapper{
+      margin:28px auto 10px;
+      background:#fff;
+      border-radius:60px;
+      display:flex;
+      align-items:center;
+      padding:18px 18px 18px 40px;
+      max-width:900px;
+      gap:16px;
+      box-shadow:0 8px 20px rgba(0,0,0,.15);
+      flex-wrap:wrap;
+    }
+
+    .search-input{
+      flex:1 1 220px;
+      border:none;
+      font-size:20px;
+      outline:none;
+      min-width:0;
+    }
+
+    .search-btn{
+      background:linear-gradient(90deg,#e67e22,#d35400);
+      border:none;
+      color:#fff;
+      padding:14px 26px;
+      border-radius:40px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    /* RESET BUTTON */
+    .reset-btn{
+      background:#fff;
+      border:1px solid #e67e22;
+      color:#e67e22;
+      padding:12px 22px;
+      border-radius:40px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      white-space:nowrap;
+      display:none; /* hanya muncul setelah search */
+    }
+
+    /* Pesan info search */
+    .search-message{
+      max-width:900px;
+      margin:0 auto 20px;
+      font-size:13px;
+      color:#fff7e5;
+      text-shadow:0 1px 3px rgba(0,0,0,.4);
+      padding-left:6px;
+    }
+
+    /* CARD POSTING */
+    .posts-wrapper{
+      margin-top:10px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+      gap:20px;
+    }
+
+    .post-card{
+      background:var(--card-cream);
+      border-radius:26px;
+      padding:18px 20px 16px;
+      box-shadow:0 8px 22px rgba(0,0,0,.18);
+      position:relative;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      transition:.2s;
+    }
+
+    .post-card-found{
+      background:linear-gradient(90deg,#ffe2b8,#f7a545);
+    }
+
+    .header-user{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .avatar{
+      width:56px;
+      height:56px;
+      border-radius:50%;
+      object-fit:cover;
+    }
+    .username{
+      font-size:18px;
+      font-weight:700;
+    }
+    .item-photo{
+      width:100%;
+      height:190px;
+      border-radius:18px;
+      object-fit:cover;
+    }
+    .meta-grid{
+      font-size:13px;
+    }
+    .meta-grid span:first-child{
+      font-weight:700;
+    }
+
+    /* tombol membalas postingan */
+    .reply-btn{
+      background:#fff;
+      padding:8px 20px;
+      border-radius:20px;
+      border:none;
+      font-size:13px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    /* status FOUND / LOST */
+    .status-pill{
+      position:absolute;
+      top:14px;
+      right:70px;
+      padding:6px 20px;
+      border-radius:20px;
+      background:#fff;
+      color:var(--deep-orange);
+      font-weight:700;
+      font-size:14px;
+    }
+
+    /* titik tiga menu */
+    .kebab-btn{
+      position:absolute;
+      top:10px;
+      right:22px;
+      border:none;
+      background:transparent;
+      font-size:22px;
+      cursor:pointer;
+    }
+
+    /* popup delete */
+    .delete-popup{
+      position:absolute;
+      top:40px;
+      right:20px;
+      background:#ffb767;
+      border-radius:8px;
+      padding:6px;
+      font-size:12px;
+      display:none;
+    }
+    .delete-popup button{
+      margin:2px;
+      font-size:12px;
+      border:none;
+      padding:6px;
+      border-radius:6px;
+      cursor:pointer;
+      font-weight:700;
+    }
+
+    /* UNDO BAR */
+    .undo-bar{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:80px;
+      background:#fff;
+      border-radius:20px;
+      padding:8px 14px;
+      box-shadow:0 4px 16px rgba(0,0,0,.35);
+      font-size:13px;
+      display:none;
+      align-items:center;
+      gap:8px;
+      z-index:110;
+    }
+    .undo-bar button{
+      border:none;
+      background:#e67e22;
+      color:#fff;
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
+    }
+
+    .bottom-nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:10px;
+      background:#fff;
+      border-radius:40px;
+      padding:6px 22px;
+      display:flex;
+      gap:28px;
+      z-index:100;
+      box-shadow:0 -4px 20px rgba(0,0,0,.35);
+      align-items:center;
+    }
+
+    .bottom-btn{
+      width:54px;
+      height:54px;
+      border-radius:50%;
+      border:none;
+      background:#f4a632;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:26px;
+      cursor:pointer;
+    }
+
+    .bottom-btn.active{
+      background:#ffe2b8;
+      border:2px solid white;
+      transform:scale(1.08);
+    }
+
+    @media(max-width:720px){
+      .search-wrapper{
+        padding:14px 18px;
+      }
+      .search-btn,
+      .reset-btn{
+        flex:0 0 auto;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="logo-wrap">
+      <img src="LOFU KACA PEMBESAR.png" alt="Logo Lost &amp; Found">
+      <span class="logo-text">Lost &amp; Found</span>
+    </div>
+
+    <nav class="nav-main">
+      <a href="#" class="nav-link active">BERANDA</a>
+      <a href="Tentang kami.html" class="nav-link">TENTANG KAMI</a>
+      <a href="Akun saya.html" class="nav-link">AKUN SAYA</a>
+
+      <span id="notifBtn" class="nav-icon">🔔</span>
+      <span id="faqBtn" class="nav-icon">❓</span>
+      <!-- pakai konfirmasi logout -->
+      <button class="logout-btn" onclick="confirmLogout()">LOG OUT</button>
+
+      <!-- POPUP NOTIF -->
+      <div id="notifPopup" class="notif-popup">
+        <div class="notif-item">Albert Einstein: Baru saja mengunggah laporan barang hilang.</div>
+        <div class="notif-item">Haruto: Menambahkan barang ditemukan</div>
+        <div class="notif-item">Ada postingan baru di Lost &amp; Found — cek kemungkinan kecocokan barang!</div>
+      </div>
+
+      <!-- POPUP FAQ -->
+      <div id="faqPopup" class="faq-popup">
+        <input class="faq-input" placeholder="Mencari pertanyaan...">
+        <p style="font-size:12px;margin-top:6px;">
+          Topik Popular: Cara Delete Postingan, Reset Password, Ubah Profil.
+        </p>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main">
+
+    <!-- BANNER -->
+    <section class="banner-row">
+      <img src="UNJ .jpg" alt="Universitas Negeri Jakarta">
+      <div class="banner-slogan">
+        <span class="slogan-text">
+          TEMUKAN,<br> KEMBALIKAN &<br> TERHUBUNG
+        </span>
+      </div>
+    </section>
+
+    <!-- SEARCH -->
+    <section class="search-wrapper">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder="Laporkan &amp; Cari Barang (jenis, lokasi, nama, dll)">
+      <button id="searchBtn" class="search-btn">Cari Sekarang</button>
+      <button id="resetBtn" class="reset-btn">Reset ke Beranda</button>
+    </section>
+
+    <!-- INFO SEARCH -->
+    <div id="searchMessage" class="search-message"></div>
+
+    <!-- LIST POSTINGAN -->
+    <section class="posts-wrapper" id="postsWrapper">
+
+      <!-- CARD LOST -->
+      <article class="post-card" data-id="1">
+        <div class="header-user">
+          <img class="avatar" src="Gea pfp.jpg" alt="Avatar Geamanda">
+          <div>
+            <div class="username">Geamanda</div>
+            <div>@FunkY</div>
+          </div>
+        </div>
+
+        <img class="item-photo" src="Pulpen.jpg" alt="Pulpen Hilang">
+
+        <div class="meta-grid">
+          <div><span>JENIS BARANG</span> : Pulpen hitam</div>
+          <div><span>LOKASI</span> : Gedung Raden Ajeng Kartini</div>
+          <div><span>KARAKTERISTIK</span> : Berwarna hitam, Berat saat digunakan</div>
+        </div>
+
+        <button class="reply-btn" onclick="window.location.href='Roomchat.html'">Membalas Postingan</button>
+
+        <div class="status-pill">LOST</div>
+        <button class="kebab-btn">⋮</button>
+
+        <div class="delete-popup">
+          <button class="confirm-del">Hapus</button>
+          <button class="cancel-del">Batal</button>
+        </div>
+      </article>
+
+      <!-- CARD FOUND -->
+      <article class="post-card post-card-found" data-id="2">
+        <div class="header-user">
+          <img class="avatar" src="septi pfp.jpg" alt="Avatar Septi">
+          <div>
+            <div class="username">Septi</div>
+            <div>@septiahsp</div>
+          </div>
+        </div>
+
+        <img class="item-photo" src="buku.jpg" alt="Buku Ditemukan">
+
+        <div class="meta-grid">
+          <div><span>JENIS BARANG</span> : Buku novel</div>
+          <div><span>LOKASI</span> : Gedung Rektor</div>
+          <div><span>KARAKTERISTIK</span> : Ada nama "Dini"</div>
+        </div>
+
+        <button class="reply-btn" onclick="window.location.href='Roomchat.html'">Membalas Postingan</button>
+
+        <div class="status-pill">FOUND</div>
+        <button class="kebab-btn">⋮</button>
+
+        <div class="delete-popup">
+          <button class="confirm-del">Hapus</button>
+          <button class="cancel-del">Batal</button>
+        </div>
+      </article>
+
+    </section>
+  </main>
+
+  <!-- UNDO BAR -->
+  <div class="undo-bar" id="undoBar">
+    <span>Postingan dihapus.</span>
+    <button id="undoBtn">Batalkan</button>
+  </div>
+
+  <!-- BOTTOM NAV (tanpa ikon kaca pembesar) -->
+  <div class="bottom-nav">
+    <button class="bottom-btn" onclick="window.location.href='Uploading Page.html'">＋</button>
+    <button class="bottom-btn active">🏠</button>
+    <button class="bottom-btn" onclick="window.location.href='Roomchat.html'">💬</button>
+    <button class="bottom-btn" onclick="window.location.href='Akun saya.html'">👤</button>
+  </div>
+
+<script>
+/* NOTIF BTN */
+const notifBtn = document.getElementById("notifBtn");
+const notifPopup = document.getElementById("notifPopup");
+
+/* FAQ BTN */
+const faqBtn = document.getElementById("faqBtn");
+const faqPopup = document.getElementById("faqPopup");
+
+notifBtn.addEventListener("click", ()=>{
+  faqPopup.style.display="none";
+  notifPopup.style.display = notifPopup.style.display==="block" ? "none" : "block";
+});
+
+faqBtn.addEventListener("click", ()=>{
+  notifPopup.style.display="none";
+  faqPopup.style.display = faqPopup.style.display==="block" ? "none" : "block";
+});
+
+/* Titik tiga menu */
+document.querySelectorAll(".kebab-btn").forEach(btn=>{
+  btn.onclick = ()=>{
+    const card = btn.closest(".post-card");
+    card.querySelector(".delete-popup").style.display="block";
+  };
+});
+
+document.querySelectorAll(".cancel-del").forEach(btn=>{
+  btn.onclick = ()=>{
+    btn.closest(".delete-popup").style.display="none";
+  };
+});
+
+/* Delete posting + UNDO */
+const undoBar  = document.getElementById('undoBar');
+const undoBtn  = document.getElementById('undoBtn');
+let lastDeletedCard = null;
+let lastDeletedParent = null;
+let lastDeletedNextSibling = null;
+
+document.querySelectorAll(".confirm-del").forEach(btn=>{
+  btn.onclick = ()=>{
+    const card = btn.closest(".post-card");
+    const parent = card.parentNode;
+
+    // simpan referensi buat undo
+    lastDeletedCard = card;
+    lastDeletedParent = parent;
+    lastDeletedNextSibling = card.nextElementSibling;
+
+    parent.removeChild(card);
+    btn.closest(".delete-popup").style.display="none";
+
+    // tampilkan bar undo
+    undoBar.style.display = "flex";
+  };
+});
+
+undoBtn.addEventListener("click", ()=>{
+  if(lastDeletedCard && lastDeletedParent){
+    if(lastDeletedNextSibling && lastDeletedNextSibling.parentNode === lastDeletedParent){
+      lastDeletedParent.insertBefore(lastDeletedCard, lastDeletedNextSibling);
+    }else{
+      lastDeletedParent.appendChild(lastDeletedCard);
+    }
+  }
+  lastDeletedCard = null;
+  lastDeletedParent = null;
+  lastDeletedNextSibling = null;
+  undoBar.style.display = "none";
+});
+
+/* KONFIRMASI LOGOUT */
+function confirmLogout(){
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.background = "rgba(0,0,0,0.5)";
+  overlay.style.display = "flex";
+  overlay.style.alignItems = "center";
+  overlay.style.justifyContent = "center";
+  overlay.style.zIndex = "9999";
+
+  overlay.innerHTML = `
+    <div style="
+      background:#fff;
+      padding:24px 26px 20px;
+      border-radius:14px;
+      text-align:center;
+      box-shadow:0 6px 20px rgba(0,0,0,.4);
+      max-width:320px;
+    ">
+      <div style="font-size:18px;font-weight:700;margin-bottom:12px;">
+        Apakah kamu yakin ingin logout?
+      </div>
+      <div style="display:flex;justify-content:center;gap:10px;">
+        <button id="yesLogout" style="
+          padding:8px 18px;
+          border-radius:8px;
+          background:#e67e22;
+          border:none;
+          color:#fff;
+          font-weight:700;
+          cursor:pointer;
+        ">YA</button>
+        <button id="cancelLogout" style="
+          padding:8px 18px;
+          border-radius:8px;
+          background:#ccc;
+          border:none;
+          font-weight:700;
+          cursor:pointer;
+        ">BATAL</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  document.getElementById("yesLogout").onclick = () => {
+    window.location.href = "Beranda belum Login - Copy.html";
+  };
+
+  document.getElementById("cancelLogout").onclick = () => {
+    overlay.remove();
+  };
+}
+
+/* ====== SEARCH FUNCTION + RESET ====== */
+const searchInput = document.getElementById('searchInput');
+const searchBtn   = document.getElementById('searchBtn');
+const resetBtn    = document.getElementById('resetBtn');
+const searchMsg   = document.getElementById('searchMessage');
+const postCards   = document.querySelectorAll('.post-card');
+
+function resetSearch(){
+  searchInput.value = '';
+  postCards.forEach(card=>{
+    card.style.display = '';
+  });
+  searchMsg.textContent = '';
+  resetBtn.style.display = 'none';
+}
+
+function runSearch(){
+  const q = searchInput.value.trim().toLowerCase();
+  let found = 0;
+
+  if(!q){
+    resetSearch();
+    return;
+  }
+
+  postCards.forEach(card=>{
+    const text = card.innerText.toLowerCase();
+    if(text.includes(q)){
+      card.style.display = '';
+      found++;
+    }else{
+      card.style.display = 'none';
+    }
+  });
+
+  if(found === 0){
+    searchMsg.textContent = `Tidak ada hasil untuk "${searchInput.value}".`;
+  }else{
+    searchMsg.textContent = `Menampilkan ${found} hasil untuk "${searchInput.value}".`;
+  }
+
+  resetBtn.style.display = 'inline-block';
+}
+
+searchBtn.addEventListener('click', runSearch);
+searchInput.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter'){
+    runSearch();
+  }
+});
+resetBtn.addEventListener('click', resetSearch);
+</script>
+
+</body>
+</html>

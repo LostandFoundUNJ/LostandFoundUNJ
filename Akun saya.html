@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lost & Found — Akun Saya</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --deep-orange: #a04000;
+      --orange: #e67e22;
+      --orange-strong: #d35400;
+      --soft-cream: #ffe5c9;
+      --card-cream: #fadfc9;
+      --bg-light: #fff7e0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Libre Baskerville', serif;
+      background: linear-gradient(180deg, #ffe9c5, #f7d091);
+      color: #4a2815;
+      min-height: 100vh;
+    }
+
+    /* ========== TOP BAR ========== */
+    .top-bar {
+      width: 100%;
+      height: 110px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-wrap img {
+      height: 90px;
+      width: auto;
+      display: block;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--deep-orange);
+    }
+
+    .nav-main {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--deep-orange);
+      position: relative; /* supaya popup bisa absolute relatif ke nav */
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--deep-orange);
+    }
+
+    .nav-link.active {
+      color: var(--deep-orange);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .nav-icon {
+      font-size: 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .logout-btn {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--deep-orange);
+      cursor: pointer;
+    }
+
+    /* ========== POPUP NOTIFIKASI ========== */
+    .notif-popup {
+      position: absolute;
+      top: 70px;
+      right: 120px;
+      width: 420px;
+      background: linear-gradient(180deg, #f39c3b, #d8681c);
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(0,0,0,.4);
+      color: #fff;
+      display: none;
+      overflow: hidden;
+      z-index: 30;
+    }
+
+    .notif-header {
+      padding: 14px 18px;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      border-bottom: 2px solid rgba(255,255,255,.2);
+    }
+
+    .notif-list {
+      padding: 10px 14px 12px;
+      background: rgba(255,255,255,.05);
+    }
+
+    .notif-item {
+      background: rgba(255,255,255,.88);
+      color: #8a3a10;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 12px;
+      margin-bottom: 8px;
+      display: grid;
+      grid-template-columns: 32px 1fr 18px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .notif-icon-mail {
+      font-size: 20px;
+    }
+    .notif-badge {
+      font-weight: 900;
+      font-size: 12px;
+      text-align: right;
+    }
+
+    /* ========== POPUP PUSAT BANTUAN (FAQ) ========== */
+    .faq-popup {
+      position: absolute;
+      top: 70px;
+      right: 40px;
+      width: 420px;
+      background: linear-gradient(180deg, #f39c3b, #d8681c);
+      border-radius: 10px;
+      box-shadow: 0 8px 25px rgba(0,0,0,.4);
+      color: #fff;
+      display: none;
+      overflow: hidden;
+      z-index: 30;
+    }
+
+    .faq-header {
+      padding: 14px 18px;
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      border-bottom: 2px solid rgba(255,255,255,.2);
+    }
+
+    .faq-body {
+      padding: 14px 16px 16px;
+      background: rgba(255,255,255,.06);
+    }
+
+    .faq-search-row {
+      background:#fff;
+      border-radius:6px;
+      display:flex;
+      align-items:center;
+      padding:8px 10px;
+      gap:8px;
+      color:#c94a09;
+    }
+
+    .faq-search-row span {
+      font-size:18px;
+    }
+
+    .faq-input {
+      border:none;
+      outline:none;
+      width:100%;
+      font-size:13px;
+      font-family:'Libre Baskerville',serif;
+    }
+
+    .faq-popular {
+      margin-top:10px;
+      font-size:12px;
+      line-height:1.6;
+    }
+
+    /* ========== POPUP LOGOUT ========== */
+    .logout-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+    }
+
+    .logout-modal {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px 32px 20px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,.4);
+      color: #000;
+    }
+
+    .logout-modal p {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+    .logout-actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .logout-actions button {
+      min-width: 90px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .logout-yes {
+      background: #e67e22;
+      color: #fff;
+    }
+
+    .logout-cancel {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    /* ========== LAYOUT UTAMA ========== */
+    .layout {
+      max-width: 1400px;
+      margin: 26px auto 90px;
+      padding: 0 26px 80px;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 24px;
+    }
+
+    /* ========== PANEL PROFIL KIRI ========== */
+    .profile-card {
+      background: linear-gradient(180deg, #f9b35d, #f18a32);
+      border-radius: 26px;
+      padding: 22px 22px 26px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, .25);
+      color: #fff;
+      position: relative;
+    }
+
+    .profile-dots {
+      position: absolute;
+      top: 12px;
+      right: 16px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .profile-photo-wrap {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 16px auto 12px;
+      border: 6px solid #ffe9c5;
+    }
+
+    .profile-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-name {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .profile-handle {
+      text-align: center;
+      margin-top: 4px;
+      font-size: 15px;
+    }
+
+    .profile-nim {
+      text-align: center;
+      margin-top: 2px;
+      font-size: 13px;
+    }
+
+    .profile-field {
+      margin-top: 14px;
+    }
+
+    .profile-field-label {
+      background: #f47e1f;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .profile-field-value {
+      margin-top: 4px;
+      background: #fff7e5;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 14px;
+      color: #5a2a15;
+    }
+
+    .profile-social-title {
+      margin-top: 18px;
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    .social-list {
+      margin-top: 6px;
+      background: #fff7e5;
+      border-radius: 18px;
+      padding: 10px 12px;
+      color: #4a2815;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* ========== KONTEN KANAN ========== */
+    .content-column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-title {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: 1.5px;
+      color: var(--deep-orange);
+      text-shadow: 0 2px 4px #000000;
+      margin-bottom: 4px;
+    }
+
+    .cards-row {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    /* ========== CARD BARANG ========== */
+    .item-card {
+      background: linear-gradient(180deg, #ffe9c5, #fad7a0);
+      border-radius: 26px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, .28);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .item-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .item-avatar {
+      width: 74px;
+      height: 74px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 4px solid #ffe9c5;
+      flex-shrink: 0;
+    }
+
+    .item-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .item-user-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #4a2815;
+    }
+
+    .item-user-handle {
+      font-size: 14px;
+      color: #6d3c22;
+    }
+
+    .item-inner {
+      margin-top: 6px;
+      background: linear-gradient(180deg, #f8993a, #e56b20);
+      border-radius: 26px;
+      padding: 16px 18px 14px;
+      color: #fff;
+      position: relative;
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .inner-photo-wrap {
+      grid-row: 1 / span 2;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .inner-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .status-pill {
+      position: absolute;
+      top: 18px;
+      right: 20px;
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      background: #fff;
+      color: #d35400;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
+    }
+
+    .status-pill.lost {
+      color: #b33939;
+    }
+
+    .detail-grid {
+      margin-top: 46px;
+      font-size: 13px;
+    }
+
+    .detail-row {
+      margin-bottom: 6px;
+    }
+
+    .detail-row span:first-child {
+      font-weight: 700;
+    }
+
+    .reply-bar {
+      margin-top: 10px;
+      background: #fff;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      padding: 8px 14px;
+      font-size: 13px;
+      color: #6b341c;
+    }
+
+    .reply-text {
+      flex: 1;
+    }
+
+    .reply-icon {
+      font-size: 18px;
+      margin-left: 8px;
+    }
+
+    /* ========== BOTTOM NAV ========== */
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      background: #fff;
+      border-radius: 40px;
+      padding: 6px 22px;
+      display: flex;
+      gap: 28px;
+      z-index: 20;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, .35);
+      align-items: center;
+    }
+
+    .bottom-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      background: #f4a632;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      color: #000;
+      transition: transform .15s;
+    }
+
+    .bottom-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .bottom-btn.home {
+      background: #e67e22;
+    }
+
+    /* tombol orang yang aktif di halaman Akun Saya */
+    .bottom-btn.person.active {
+      background: #e67e22;
+      animation: pulseAlive 1.4s infinite;
+    }
+
+    @keyframes pulseAlive {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(230,126,34,0.5);
+      }
+      70% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 12px rgba(230,126,34,0);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(230,126,34,0);
+      }
+    }
+
+    /* ========== RESPONSIVE ========== */
+    @media (max-width: 1100px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-card {
+        order: 1;
+      }
+
+      .content-column {
+        order: 0;
+      }
+
+      .cards-row {
+        grid-template-columns: 1fr;
+      }
+
+      .notif-popup,
+      .faq-popup {
+        right: 10px;
+        width: 90vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="logo-wrap">
+      <img src="LOFU KACA PEMBESAR.png" alt="Lost & Found Logo">
+      <span class="logo-text">Lost &amp; Found</span>
+    </div>
+
+    <nav class="nav-main">
+      <a href="Beranda kalo udah Login.html" class="nav-link">BERANDA</a>
+      <a href="Tentang kami.html" class="nav-link">TENTANG KAMI</a>
+      <a href="Akun-saya.html" class="nav-link active">AKUN SAYA</a>
+
+      <!-- ikon dengan id supaya bisa di-JS -->
+      <span class="nav-icon" id="notifBtn">🔔</span>
+      <span class="nav-icon" id="helpBtn">❓</span>
+      <button class="logout-btn" id="logoutBtn">LOG OUT</button>
+
+      <!-- POPUP NOTIFIKASI -->
+      <div id="notifPopup" class="notif-popup">
+        <div class="notif-header">NOTIFIKASI</div>
+        <div class="notif-list">
+          <div class="notif-item">
+            <div class="notif-icon-mail">✉️</div>
+            <div>
+              <strong>Albert Einstein</strong> baru saja mengunggah laporan barang hilang.
+              <em> Cek apakah itu barangmu!</em>
+            </div>
+            <div class="notif-badge">1</div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon-mail">✉️</div>
+            <div>
+              <strong>Haruto</strong> menambahkan barang ditemukan.
+              <em> Yuk, lihat detailnya siapa tahu punyamu!</em>
+            </div>
+            <div class="notif-badge">1</div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon-mail">✉️</div>
+            <div>
+              Ada postingan baru di <strong>Lost &amp; Found</strong>. Jangan sampai
+              ketinggalan, <em>bisa jadi barangmu ada di sana.</em>
+            </div>
+            <div class="notif-badge">1</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POPUP PUSAT BANTUAN -->
+      <div id="faqPopup" class="faq-popup">
+        <div class="faq-header">PUSAT BANTUAN</div>
+        <div class="faq-body">
+          <div class="faq-search-row">
+            <span>🔎</span>
+            <input id="faqInput" class="faq-input" placeholder="Mencari Pertanyaan">
+          </div>
+          <div class="faq-popular">
+            <strong>Topik Populer :</strong><br>
+            <span id="faqPopularText">
+              Cara Delete Postingan, Cara Reset Password, Cara Ubah Profile.
+            </span>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- LAYOUT UTAMA -->
+  <div class="layout">
+    <!-- PROFIL KIRI -->
+    <aside class="profile-card">
+      <div class="profile-dots">⋮</div>
+
+      <div class="profile-photo-wrap">
+        <img src="Alya pfp.jpg" alt="Foto Profil">
+      </div>
+
+      <div class="profile-name">Alya Shafa Firdaus</div>
+      <div class="profile-handle">@AlyaShafa12</div>
+      <div class="profile-nim">NIM 1710624028</div>
+
+      <div class="profile-field">
+        <div class="profile-field-label">Nama Lengkap</div>
+        <div class="profile-field-value">Alya Shafa Firdaus</div>
+      </div>
+
+      <div class="profile-field">
+        <div class="profile-field-label">NIM</div>
+        <div class="profile-field-value">1710624024</div>
+      </div>
+
+      <div class="profile-field">
+        <div class="profile-field-label">Nama Pengguna</div>
+        <div class="profile-field-value">@AlyaShafa12</div>
+      </div>
+
+      <div class="profile-field">
+        <div class="profile-field-label">Program Studi</div>
+        <div class="profile-field-value">S1 Bisnis Digital</div>
+      </div>
+
+      <div class="profile-field">
+        <div class="profile-field-label">Fakultas</div>
+        <div class="profile-field-value">FEB</div>
+      </div>
+
+      <div class="profile-social-title">Media Sosial</div>
+      <div class="social-list">
+        @aallyaa._ (IG)<br>
+        @alealeyeah._ (Twitter/X)<br>
+        AlyaShafa0528@mhs.unj.ac.id
+      </div>
+    </aside>
+
+    <!-- KONTEN KANAN -->
+    <section class="content-column">
+
+      <!-- TEMUAN BARANG -->
+      <div>
+        <div class="section-title">TEMUAN BARANG</div>
+        <div class="cards-row">
+
+          <!-- CARD FOUND 1 -->
+          <article class="item-card">
+            <div class="item-header">
+              <div class="item-avatar">
+                <img src="Alya pfp.jpg" alt="Alya">
+              </div>
+              <div class="item-user-info">
+                <div class="item-user-name">Alya Shafa F.</div>
+                <div class="item-user-handle">@AlyaShafa12</div>
+              </div>
+            </div>
+
+            <div class="item-inner">
+              <div class="inner-photo-wrap">
+                <img src="buku.jpg" alt="Dompet ditemukan">
+              </div>
+
+              <div class="status-pill">FOUND</div>
+
+              <div class="detail-grid">
+                <div class="detail-row"><span>JENIS BARANG</span> : Dompet LV</div>
+                <div class="detail-row"><span>LOKASI</span> : Gedung Rektor samping GDS</div>
+                <div class="detail-row"><span>KARAKTERISTIK</span> : Warna hitam, berbahan kulit, berbentuk lipat</div>
+              </div>
+
+              <div class="reply-bar">
+                <div class="reply-text">Posting Balasan Anda</div>
+                <div class="reply-icon">💬</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- CARD FOUND 2 -->
+          <article class="item-card">
+            <div class="item-header">
+              <div class="item-avatar">
+                <img src="Alya pfp.jpg" alt="Alya">
+              </div>
+              <div class="item-user-info">
+                <div class="item-user-name">Alya Shafa F.</div>
+                <div class="item-user-handle">@AlyaShafa12</div>
+              </div>
+            </div>
+
+            <div class="item-inner">
+              <div class="inner-photo-wrap">
+                <img src="Stanleyy.jpg" alt="Tumblr ditemukan">
+              </div>
+
+              <div class="status-pill">FOUND</div>
+
+              <div class="detail-grid">
+                <div class="detail-row"><span>JENIS BARANG</span> : Tumblr Stanley</div>
+                <div class="detail-row"><span>LOKASI</span> : Di depan Sekret</div>
+                <div class="detail-row"><span>KARAKTERISTIK</span> : Berat, berwarna pink fanta, berisi minuman teh tarik</div>
+              </div>
+
+              <div class="reply-bar">
+                <div class="reply-text">Posting Balasan Anda</div>
+                <div class="reply-icon">💬</div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+      <!-- BARANG DICARI -->
+      <div>
+        <div class="section-title">BARANG DICARI</div>
+        <div class="cards-row">
+
+          <!-- CARD LOST -->
+          <article class="item-card">
+            <div class="item-header">
+              <div class="item-avatar">
+                <img src="Alya pfp.jpg" alt="Alya">
+              </div>
+              <div class="item-user-info">
+                <div class="item-user-name">Alya Shafa F.</div>
+                <div class="item-user-handle">@AlyaShafa12</div>
+              </div>
+            </div>
+
+            <div class="item-inner">
+              <div class="inner-photo-wrap">
+                <img src="Blue sisters.jpg" alt="Novel hilang">
+              </div>
+
+              <div class="status-pill lost">LOST</div>
+
+              <div class="detail-grid">
+                <div class="detail-row"><span>JENIS BARANG</span> : Novel berjudul "Blue Sisters"</div>
+                <div class="detail-row"><span>LOKASI</span> : Terakhir di Gedung SFD Lantai 3 (di depan Lab Komputer Bisnis Digital)</div>
+                <div class="detail-row"><span>KARAKTERISTIK</span> : Cover putih, ada cap "Alya most favorite book" di halaman kedua</div>
+              </div>
+
+              <div class="reply-bar">
+                <div class="reply-text">Posting Balasan Anda</div>
+                <div class="reply-icon">💬</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- CARD LOST 2 -->
+          <article class="item-card">
+            <div class="item-header">
+              <div class="item-avatar">
+                <img src="Alya pfp.jpg" alt="Alya">
+              </div>
+              <div class="item-user-info">
+                <div class="item-user-name">Alya Shafa F.</div>
+                <div class="item-user-handle">@AlyaShf</div>
+              </div>
+            </div>
+
+            <div class="item-inner">
+              <div class="inner-photo-wrap">
+                <img src="The great gatsby .jpg" alt="Buku ditemukan lagi">
+              </div>
+
+              <div class="status-pill lost">LOST</div>
+
+              <div class="detail-grid">
+                <div class="detail-row"><span>JENIS BARANG</span> : Buku novel judul "The Great Gatsby"</div>
+                <div class="detail-row"><span>LOKASI</span> : Gedung Raden Ajeng Kartini 1016</div>
+                <div class="detail-row"><span>KARAKTERISTIK</span> : Buku tipis, cover biru tua, berbahasa Inggris, tanpa nama</div>
+              </div>
+
+              <div class="reply-bar">
+                <div class="reply-text">Posting Balasan Anda</div>
+                <div class="reply-icon">💬</div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- BOTTOM NAV (tanpa ikon kaca pembesar) -->
+  <div class="bottom-nav">
+    <button class="bottom-btn">＋</button>
+    <button class="bottom-btn home" onclick="window.location.href='Beranda kalo udah Login.html'">🏠</button>
+    <button class="bottom-btn" onclick="window.location.href='ROOMCHAT.html'">💬</button>
+    <button class="bottom-btn person active" onclick="window.location.href='Akun-saya.html'">👤</button>
+  </div>
+
+  <!-- POPUP LOGOUT -->
+  <div id="logoutOverlay" class="logout-overlay">
+    <div class="logout-modal">
+      <p>Apakah kamu yakin ingin logout?</p>
+      <div class="logout-actions">
+        <button id="logoutYes" class="logout-yes">YA</button>
+        <button id="logoutCancel" class="logout-cancel">BATAL</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const notifBtn = document.getElementById('notifBtn');
+  const helpBtn  = document.getElementById('helpBtn');
+  const notifPopup = document.getElementById('notifPopup');
+  const faqPopup   = document.getElementById('faqPopup');
+  const faqInput   = document.getElementById('faqInput');
+  const faqPopularText = document.getElementById('faqPopularText');
+
+  const logoutBtn     = document.getElementById('logoutBtn');
+  const logoutOverlay = document.getElementById('logoutOverlay');
+  const logoutYes     = document.getElementById('logoutYes');
+  const logoutCancel  = document.getElementById('logoutCancel');
+
+  // toggle helper
+  function hideAllPopups(){
+    notifPopup.style.display = 'none';
+    faqPopup.style.display   = 'none';
+  }
+
+  notifBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const isShown = notifPopup.style.display === 'block';
+    hideAllPopups();
+    notifPopup.style.display = isShown ? 'none' : 'block';
+  });
+
+  helpBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    const isShown = faqPopup.style.display === 'block';
+    hideAllPopups();
+    faqPopup.style.display = isShown ? 'none' : 'block';
+  });
+
+  // klik di luar notif/faq => tutup
+  document.addEventListener('click', ()=>{
+    hideAllPopups();
+  });
+
+  // cegah bubbling saat klik di dalam popup
+  notifPopup.addEventListener('click', e=>e.stopPropagation());
+  faqPopup.addEventListener('click', e=>e.stopPropagation());
+
+  // ESC untuk menutup semua popup
+  document.addEventListener('keydown', e=>{
+    if(e.key === 'Escape') {
+      hideAllPopups();
+      logoutOverlay.style.display = 'none';
+    }
+  });
+
+  // FAQ suggestions sederhana
+  faqInput.addEventListener('input', (e)=>{
+    const val = e.target.value.toLowerCase();
+    if(!val){
+      faqPopularText.textContent =
+        'Cara Delete Postingan, Cara Reset Password, Cara Ubah Profile.';
+    }else if(val.includes('password')){
+      faqPopularText.textContent =
+        'Reset password: klik “lupa password” di halaman login lalu cek email UNJ kamu.';
+    }else if(val.includes('hapus') || val.includes('delete')){
+      faqPopularText.textContent =
+        'Hapus postingan: buka postingan > pilih titik tiga > pilih “Delete Post”.';
+    }else if(val.includes('profil') || val.includes('profile')){
+      faqPopularText.textContent =
+        'Ubah profil: masuk ke Akun Saya > klik ikon titik tiga di kartu profil.';
+    }else{
+      faqPopularText.textContent = 'Topik tidak ditemukan. Coba kata kunci lain.';
+    }
+  });
+
+  // ==== POPUP LOGOUT ====
+  logoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    logoutOverlay.style.display = 'flex';
+  });
+
+  logoutCancel.addEventListener('click', () => {
+    logoutOverlay.style.display = 'none';
+  });
+
+  logoutYes.addEventListener('click', () => {
+    window.location.href = 'Beranda belum Login - Copy.html';
+  });
+
+  // klik area gelap di luar modal => tutup
+  logoutOverlay.addEventListener('click', (e) => {
+    if (e.target === logoutOverlay) {
+      logoutOverlay.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>

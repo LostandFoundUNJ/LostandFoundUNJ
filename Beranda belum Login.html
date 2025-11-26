@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Lost & Found - Beranda + Tentang Kami</title>
+
+  <!-- fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&family=Montserrat:wght@400;700;900&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* dari beranda */
+      --orange-1:#c94a09;
+      --orange-2:#f28a2e;
+      --cream:#f7edd6;
+      --white:#ffffff;
+      --deep:#2b1f12;
+      /* dari tentang kami */
+      --deep-orange:#a04000;
+      --soft-cream:#ffe5c9;
+      --box-bg:#f29b4a;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:'Merriweather',serif;
+      background:linear-gradient(180deg,#e67722,#b94a1e); /* satu background untuk semua */
+      color:var(--deep);
+    }
+
+    .container{min-height:100vh;display:flex;flex-direction:column}
+
+    /* ================== HEADER + HERO (BERANDA) ================== */
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:22px 48px;
+      background:var(--white);
+      position:relative;
+      z-index:9999;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .logo img{
+      width:90px;
+      height:90px;
+      object-fit:contain;
+    }
+    .logo-title{
+      font-family:'Libre Baskerville',serif;
+      font-size:32px;
+      font-weight:700;
+      color:var(--orange-1);
+    }
+
+    nav{display:flex;align-items:center;gap:28px;font-family:'Montserrat',sans-serif}
+
+    .help{
+      width:44px;height:44px;border-radius:50%;
+      display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,var(--orange-2),var(--orange-1));
+      cursor:pointer;color:var(--white);font-weight:900;font-size:20px;
+    }
+
+    .navlinks{display:flex;gap:24px;font-weight:800;color:var(--orange-1)}
+    .navlinks div{cursor:pointer}
+
+    .hero{
+      flex:1;
+      background:transparent;
+      display:flex;align-items:flex-start;justify-content:center;
+      padding:56px 16px 70px;
+    }
+
+    .hero-inner{
+      max-width:1200px;width:100%;
+      color:var(--white);text-align:center;
+      position:relative;
+    }
+
+    .pill{
+      display:inline-block;background:var(--cream);color:var(--orange-1);
+      padding:12px 36px;border-radius:40px;margin-bottom:18px;
+      font-family:'Merriweather',serif;font-weight:700;
+    }
+
+    h2{
+      font-family:'Montserrat',sans-serif;
+      font-size:110px;line-height:0.9;margin-bottom:12px;
+      font-weight:900;letter-spacing:2px;
+    }
+
+    p.lead{font-size:22px;margin:22px 0;opacity:0.95}
+
+    .search-wrap{
+      display:flex;align-items:center;justify-content:center;
+      gap:18px;margin-top:28px;
+    }
+
+    .search{
+      background:var(--white);
+      border-radius:60px;
+      padding:18px 28px;
+      display:flex;align-items:center;gap:18px;
+      box-shadow:0 6px 0 rgba(0,0,0,0.06);
+      flex:1;max-width:680px;
+    }
+
+    .search input{
+      border:none;outline:none;font-size:20px;flex:1;font-family:'Merriweather',serif;
+    }
+
+    .cta{
+      background:linear-gradient(180deg,var(--orange-2),var(--orange-1));
+      border:none;border-radius:50px;padding:16px 36px;
+      font-size:26px;color:var(--cream);cursor:pointer;
+      font-family:'Merriweather',serif;font-weight:700;
+      box-shadow:0 8px 0 rgba(0,0,0,0.08);
+    }
+
+    /* FAQ Popup */
+    .faq-popup{
+      position:absolute;
+      top:95px;
+      right:48px;
+      width:360px;
+      background:linear-gradient(180deg,var(--orange-2),var(--orange-1));
+      border-radius:12px;
+      padding:18px;
+      color:white;
+      box-shadow:0 8px 30px rgba(0,0,0,0.35);
+      display:none;
+      z-index:99999;
+    }
+
+    .faq-search{
+      background:rgba(255,255,255,0.92);
+      padding:10px;border-radius:6px;
+      display:flex;gap:8px;align-items:center;
+    }
+
+    .faq-search input{
+      border:none;outline:none;padding:8px;font-size:14px;width:100%;
+    }
+
+    .faq-popular{
+      margin-top:12px;background:rgba(0,0,0,0.08);
+      padding:12px;border-radius:6px;
+    }
+
+    @media(max-width:900px){
+      h2{font-size:60px}
+      header{padding:12px 20px}
+      .faq-popup{top:78px;right:20px;width:300px}
+      .search-wrap{flex-direction:column;}
+      .cta{width:100%;max-width:260px;}
+    }
+
+    /* ======= VISI MISI CARD DI BAWAH SEARCH BAR ======= */
+    .visi-misi-section{
+      margin-top:40px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .visi-misi-title{
+      font-family:'Libre Baskerville',serif;
+      font-size:32px;
+      font-weight:700;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      text-shadow:0 3px 8px rgba(0,0,0,.4);
+      margin-bottom:14px;
+    }
+
+    .visi-misi-box{
+      max-width:720px;
+      width:100%;
+      text-align:left;
+      background:rgba(255,255,255,0.12);
+      border-radius:16px;
+      border:2px solid rgba(255,255,255,0.5);
+      padding:20px 24px;
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .visi-misi-heading{
+      font-size:18px;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    .visi-misi-block{
+      margin-top:6px;
+    }
+
+    /* ================== TENTANG KAMI (BAWAH) ================== */
+
+    .about-wrapper{
+      font-family:'Libre Baskerville',serif;
+      background:transparent;
+      color:#fff;
+      padding:40px 0 70px;
+      margin-top:0;
+    }
+
+    .about-wrapper .page-wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:0 24px;
+      position:relative;
+    }
+
+    /* Tentang Kami: judul + card seperti visi misi */
+    .about-section{
+      margin-bottom:32px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    .about-title{
+      font-family:'Libre Baskerville',serif;
+      font-size:32px;
+      font-weight:700;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      text-shadow:0 3px 8px rgba(0,0,0,.4);
+      margin-bottom:14px;
+      text-align:center;
+    }
+
+    .about-box{
+      max-width:720px;
+      width:100%;
+      text-align:left;
+      background:rgba(255,255,255,0.12);
+      border-radius:16px;
+      border:2px solid rgba(255,255,255,0.5);
+      padding:20px 24px;
+      font-size:14px;
+      line-height:1.8;
+    }
+
+    .about-box p + p{
+      margin-top:10px;
+    }
+
+    /* BERGUNA DALAM MENYELESAIKAN MASALAH */
+    .benefit-heading{
+      margin-top:8px;
+      text-align:center;
+      font-size:26px;
+      font-weight:900;
+      letter-spacing:3px;
+    }
+
+    .benefit-heading span{
+      background:#ffffff;
+      color:#c44412;
+      padding:6px 14px;
+      border-radius:6px;
+      display:inline-block;
+      margin:2px 0;
+    }
+
+    .benefit-row{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+
+    .benefit-card{
+      background:linear-gradient(135deg,#f7b46d,#f28e42);
+      border-radius:18px;
+      padding:14px 16px;
+      box-shadow:0 8px 18px rgba(0,0,0,.25);
+      font-size:12px;
+      line-height:1.6;
+      color:#2b160c;
+    }
+    .benefit-title{
+      font-size:16px;
+      font-weight:900;
+      margin-bottom:4px;
+    }
+    .benefit-sub{
+      font-size:11px;
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    /* REVIEW PENGGUNA */
+    .review-section{
+      margin-top:26px;
+      display:flex;
+      justify-content:center;
+    }
+
+    .review-area{
+      background:rgba(255,255,255,0.1);
+      border-radius:16px;
+      padding:10px 14px 12px;
+      max-width:720px;
+      width:100%;
+    }
+    .review-title{
+      background:#ffb347;
+      color:#8a3a10;
+      font-weight:900;
+      letter-spacing:3px;
+      text-align:center;
+      padding:4px 10px;
+      border-radius:8px;
+      font-size:16px;
+      margin-bottom:10px;
+    }
+
+    .review-inner{
+      display:grid;
+      grid-template-columns:120px 1fr;
+      gap:14px;
+      align-items:flex-start;
+    }
+    .review-photo{
+      width:100%;
+      height:110px;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 8px 16px rgba(0,0,0,.4);
+    }
+    .review-photo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .review-text{
+      font-size:12px;
+      line-height:1.7;
+    }
+    .review-name{
+      margin-top:6px;
+      font-size:12px;
+      font-weight:900;
+      text-align:right;
+    }
+
+    /* MASKOT TENGAH */
+    .mascot-section{
+      margin-top:34px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .mascot-section img{
+      width:260px;
+      max-width:70%;
+      filter:drop-shadow(0 8px 18px rgba(0,0,0,.5));
+    }
+
+    /* ================== FOOTER ================== */
+
+    footer{
+      margin-top:40px;
+    }
+
+    .footer-bar{
+      background:#fff7ef;
+      border-radius:16px;
+      padding:18px 24px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      color:#8a3a10;
+      font-size:13px;
+      gap:24px;
+    }
+
+    .footer-left{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      flex:1;
+    }
+
+    .footer-logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .footer-logo img{
+      height:40px;
+      width:auto;
+    }
+    .footer-logo-text{
+      font-size:18px;
+      font-weight:700;
+      font-family:'Libre Baskerville',serif;
+    }
+
+    .footer-center{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .footer-center-line1{
+      margin-bottom:4px;
+    }
+
+    .footer-right{
+      flex:1;
+      text-align:right;
+      font-size:13px;
+    }
+
+    .footer-right-title{
+      font-weight:900;
+      margin-bottom:6px;
+      font-size:15px;
+    }
+
+    @media(max-width:1040px){
+      .benefit-row{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .footer-bar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+      .footer-center{
+        align-items:flex-start;
+      }
+      .footer-right{
+        text-align:left;
+      }
+    }
+
+    @media(max-width:640px){
+      .benefit-row{
+        grid-template-columns:1fr;
+      }
+      .review-inner{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- ========== HEADER + HERO (ATAS) ========== -->
+    <header>
+      <div class="logo">
+        <img src="LOFU KACA PEMBESAR.png" alt="Lost &amp; Found Logo" />
+        <div class="logo-title">Lost &amp; Found</div>
+      </div>
+
+      <nav>
+        <div class="help" id="helpBtn">?</div>
+        <div class="navlinks">
+          <div id="loginBtn">MASUK</div>
+          <div id="signupBtn">DAFTAR</div>
+        </div>
+      </nav>
+    </header>
+
+    <main class="hero">
+      <div class="hero-inner">
+        <div class="pill">Platform Khusus Mahasiswa UNJ</div>
+
+        <h2>LAPORKAN &<br>TEMUKAN</h2>
+        <h2>BARANGMU</h2>
+
+        <p class="lead">Platform eksekutif untuk Mahasiswa Universitas Negeri Jakarta<br> dalam melaporkan & menemukan barang</p>
+
+        <div class="search-wrap">
+          <div class="search">
+            <div class="icon">🔍</div>
+            <input id="q" placeholder="Laporkan & Cari Barang">
+          </div>
+          <button class="cta" id="searchBtn">Cari Sekarang</button>
+        </div>
+
+        <!-- VISI MISI CARD PERSIS DI BAWAH SEARCH -->
+        <section class="visi-misi-section">
+          <div class="visi-misi-title">VISI &amp; MISI KAMI</div>
+
+          <div class="visi-misi-box">
+            <div class="visi-misi-heading">Lost &amp; Found</div>
+
+            <div class="visi-misi-block">
+              <strong>MISI</strong><br>
+              Menghadirkan sistem informasi lost &amp; found berbasis teknologi digital yang
+              mudah digunakan dan terintegrasi. Menyediakan fitur pencarian dan temuan yang
+              efisien untuk mempercepat proses pengembalian barang.
+            </div>
+
+            <div class="visi-misi-block" style="margin-top:10px;">
+              <strong>VISI</strong><br>
+              Menjadi platform digital terpercaya yang mampu menghadirkan solusi inovatif dalam
+              mengelola barang-barang yang hilang dan temuan, serta menciptakan ekosistem kampus
+              yang aman, tertib, dan inklusif.
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- FAQ POPUP -->
+      <div class="faq-popup" id="faqPopup">
+        <h3>PUSAT BANTUAN</h3>
+
+        <div class="faq-search">
+          <div style="font-size:18px;">🔎</div>
+          <input id="faqInput" placeholder="Mencari Pertanyaan">
+        </div>
+
+        <div class="faq-popular">
+          <strong>Topik Popular :</strong>
+          <p style="margin-top:8px">
+            Cara Delete Postingan, Cara Reset Password, Cara Ubah Profile.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- ========== TENTANG KAMI (SETELAH HERO) ========== -->
+    <section class="about-wrapper">
+      <div class="page-wrap">
+
+        <!-- TENTANG KAMI: judul + card -->
+        <section class="about-section">
+          <div class="about-title">TENTANG KAMI</div>
+          <div class="about-box">
+            <p>
+              Lost &amp; Found adalah platform digital yang dirancang untuk membantu Mahasiswa, Dosen,
+              dan seluruh Civitas Akademika FEB UNJ dalam menemukan dan melaporkan barang yang hilang
+              secara cepat, mudah, dan terstruktur.
+            </p>
+            <p>
+              Melalui sistem yang terintegrasi dan ramah pengguna, setiap laporan kehilangan maupun
+              temuan barang dapat terdokumentasi dengan rapi, sehingga proses pencarian dan
+              pengembalian barang menjadi lebih efisien, aman, dan transparan.
+            </p>
+          </div>
+        </section>
+
+        <!-- BERGUNA DALAM MENYELESAIKAN MASALAH -->
+        <section>
+          <div class="benefit-heading">
+            <span>BERGUNA DALAM</span><br>
+            <span>MENYELESAIKAN MASALAH</span>
+          </div>
+
+          <div class="benefit-row">
+            <div class="benefit-card">
+              <div class="benefit-title">PENCARIAN</div>
+              <div class="benefit-sub">LOST &amp; FOUND</div>
+              <p>
+                Menyediakan fitur pencarian untuk memudahkan pengguna mencari barang hilang,
+                khususnya dalam area kampus yang luas dan padat aktivitas.
+              </p>
+            </div>
+
+            <div class="benefit-card">
+              <div class="benefit-title">TEMUAN</div>
+              <div class="benefit-sub">LOST &amp; FOUND</div>
+              <p>
+                Mencocokkan deskripsi, foto, dan lokasi barang temuan dengan laporan kehilangan
+                sehingga proses identifikasi pemilik menjadi lebih cepat dan akurat.
+              </p>
+            </div>
+
+            <div class="benefit-card">
+              <div class="benefit-title">PENYELESAIAN</div>
+              <div class="benefit-sub">LOST &amp; FOUND</div>
+              <p>
+                Membantu menyelesaikan proses pengembalian barang dengan fitur Chat/DM sehingga
+                pelapor dan penemu barang dapat saling terhubung secara langsung dan aman.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- REVIEW PENGGUNA (dengan space foto) -->
+        <section class="review-section">
+          <div class="review-area">
+            <div class="review-title">REVIEW PENGGUNA</div>
+            <div class="review-inner">
+              <!-- SPACE FOTO: ganti src ini dengan fotomu -->
+              <div class="review-photo">
+                <img src="DEENY.png" alt="Foto Pengguna">
+              </div>
+              <div>
+                <p class="review-text">
+                  “Lost &amp; Found telah membantu saya dalam menemukan barang yang sempat tertinggal di kampus.
+                  Proses laporan kehilangan yang mudah dan cepat serta fitur Chat/DM yang efektif menjadi sebuah
+                  inovasi digital yang sangat membantu mahasiswa.”
+                </p>
+                <div class="review-name">— DENNY, Mahasiswi UNJ</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- MASKOT DI TENGAH -->
+        <section class="mascot-section">
+          <img src="maskot.png" alt="Maskot Lost & Found">
+        </section>
+
+        <!-- FOOTER DI BAWAH MASKOT -->
+        <footer>
+          <div class="footer-bar">
+            <!-- KIRI: Logo -->
+            <div class="footer-left">
+              <div class="footer-logo">
+                <img src="LOFU KACA PEMBESAR.png" alt="Logo Lost & Found">
+                <span class="footer-logo-text">Lost &amp; Found</span>
+              </div>
+            </div>
+
+            <!-- TENGAH: Slogan + copyright -->
+            <div class="footer-center">
+              <div class="footer-center-line1">Temukan, Kembalikan, Terhubung</div>
+              <div class="footer-center-line2">© 2025 – All rights reserved.</div>
+            </div>
+
+            <!-- KANAN: Kontak kampus -->
+            <div class="footer-right">
+              <div class="footer-right-title">Kontak Kampus UNJ</div>
+              <div>
+                Universitas Negeri Jakarta<br>
+                Jl. Rawamangun Muka, Jakarta Timur<br>
+                (+6221) 4788 2394
+              </div>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    /* FAQ Popup Logic */
+    const helpBtn = document.getElementById("helpBtn");
+    const faq = document.getElementById("faqPopup");
+    let faqOpen = false;
+
+    const openFAQ = () => {
+      faq.style.display = "block";
+      faqOpen = true;
+      positionFAQ();
+    };
+
+    const closeFAQ = () => {
+      faq.style.display = "none";
+      faqOpen = false;
+    };
+
+    const positionFAQ = () => {
+      const rect = helpBtn.getBoundingClientRect();
+      faq.style.top = rect.bottom + 10 + "px";
+      faq.style.right = (window.innerWidth - rect.right) + "px";
+    };
+
+    helpBtn.onclick = () => faqOpen ? closeFAQ() : openFAQ();
+    window.onresize = () => faqOpen && positionFAQ();
+
+    document.addEventListener("click", e => {
+      if (!faq.contains(e.target) && !helpBtn.contains(e.target)) closeFAQ();
+    });
+
+    document.addEventListener("keydown", e => {
+      if (e.key === "Escape") closeFAQ();
+    });
+
+    /* Search Button */
+    document.getElementById("searchBtn").onclick = () => {
+      const q = document.getElementById("q").value.trim();
+      if (!q) return alert("Masukkan kata kunci untuk mencari barang.");
+      alert("Mencari: " + q);
+    };
+
+    /* Login & Signup Redirect */
+    document.getElementById("loginBtn").onclick = () => {
+      window.location.href = "Login.html.html";
+    };
+
+    document.getElementById("signupBtn").onclick = () => {
+      window.location.href = "Sign up.html.html";
+    };
+
+    /* FAQ Input Suggestions */
+    document.getElementById("faqInput").oninput = (e) => {
+      const val = e.target.value.toLowerCase();
+      const p = document.querySelector(".faq-popular p");
+
+      if (!val)
+        p.textContent = "Cara Delete Postingan, Cara Reset Password, Cara Ubah Profile.";
+      else if (val.includes("password"))
+        p.textContent = "Reset password: masuk > lupa password > cek email.";
+      else if (val.includes("hapus") || val.includes("delete"))
+        p.textContent = "Hapus postingan: buka posting > opsi > hapus.";
+      else
+        p.textContent = "Tidak menemukan topik.";
+    };
+  </script>
+</body>
+</html>

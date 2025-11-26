@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lost & Found - Room Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- FONT LIBRE BASKERVILLE UNTUK HEADER -->
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- FONT UTAMA UI -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --deep-orange:#a04000;
+      --orange-light: #ffd27a;
+      --orange: #f7a527;
+      --orange-dark: #f47b16;
+      --bg: #fff7d9;
+      --text-dark: #3d2200;
+      --sidebar-bg-top: #ffb24a;
+      --sidebar-bg-bottom: #f47b16;
+      --bubble: #ffa726;
+      --bubble-other: #ffca64;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ---------- HEADER / NAVBAR ---------- */
+    header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      padding: 12px 40px;
+      background: #ffffff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      font-family: "Libre Baskerville", serif;
+      color: var(--deep-orange);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--deep-orange);
+      margin-right: 60px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #ffb24a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 999px;
+      display: block;
+    }
+
+    nav {
+      display: flex;
+      gap: 40px;
+      font-weight: 600;
+      font-size: 17px;
+      margin-left: 175px;
+      margin-top: 5px;
+      font-family: "Libre Baskerville", serif;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--deep-orange);
+      letter-spacing: 0.05em;
+    }
+
+    .nav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-family: "Libre Baskerville", serif;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      color: #fff;
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .logout {
+      font-weight: 700;
+      color: #ff5c40;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+    }
+
+    /* ---------- LAYOUT UTAMA ---------- */
+    .page {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      padding: 0 40px 90px;
+      gap: 20px;
+      position: relative;
+    }
+
+    /* ---------- SIDEBAR KIRI ---------- */
+    .sidebar {
+      background: linear-gradient(to bottom, var(--sidebar-bg-top), var(--sidebar-bg-bottom));
+      border-radius: 18px;
+      padding: 18px 18px 12px;
+      display: flex;
+      flex-direction: column;
+      color: #fffdf6;
+    }
+
+    .profile-card {
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #f0f0f0;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-name {
+      font-weight: 700;
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .profile-id {
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .profile-major {
+      font-size: 13px;
+    }
+
+    .chat-list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow-y: auto;
+    }
+
+    .chat-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .chat-item.active {
+      background: #fff;
+      color: var(--orange-dark);
+      font-weight: 600;
+    }
+
+    .chat-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #f0f0f0;
+    }
+
+    .chat-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .chat-name {
+      font-size: 15px;
+    }
+
+    .sidebar-scroll-indicator {
+      margin-top: auto;
+      text-align: center;
+      font-size: 24px;
+      opacity: 0.7;
+      padding-top: 6px;
+    }
+
+    /* ---------- AREA CHAT ---------- */
+    .chat-wrapper {
+      background: #fffbe7;
+      border-radius: 18px;
+      padding: 14px 0 0;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .found-card {
+      display: flex;
+      gap: 12px;
+      padding: 0 22px 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .found-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .found-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .found-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .found-owner {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .found-small-card {
+      align-self: flex-start;
+      background: linear-gradient(135deg, #fffbf2, #ffd790);
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      max-width: 280px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .found-small-card b {
+      font-size: 12px;
+    }
+
+    .chat-body {
+      flex: 1;
+      padding: 10px 22px 90px;
+      overflow-y: auto;
+      position: relative;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .message {
+      max-width: 60%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      margin-bottom: 14px;
+      font-size: 15px;
+      line-height: 1.3;
+      position: relative;
+    }
+
+    .message.me {
+      margin-left: auto;
+      background: var(--bubble);
+      border-bottom-right-radius: 4px;
+    }
+
+    .message.other {
+      margin-right: auto;
+      background: var(--bubble-other);
+      border-bottom-left-radius: 4px;
+    }
+
+    .message-time {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .chat-input-wrap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to top, #ffb24a, #f89a32);
+      padding: 8px 14px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-input-row input {
+      flex: 1;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 14px;
+      font-size: 15px;
+      outline: none;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .chat-input-row button.send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      background: #000;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    /* ---------- NAVBAR BAWAH ---------- */
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 8px 0 10px;
+      background: linear-gradient(to top, #ffb24a, #aa5c03);
+      display: flex;
+      justify-content: center;
+      gap: 26px;
+      z-index: 15;
+      box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.25);
+    }
+
+    .bottom-nav button {
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #ffb24a;
+      box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      transition: 0.2s;
+    }
+
+    .bottom-nav button.active {
+      background: #a04000 !important;
+      color: #fff;
+      font-weight: 600;
+      transform: scale(1.07);
+      box-shadow: 0 0 8px rgba(0,0,0,.45);
+    }
+
+    /* ---------- SIDE PANEL (NOTIF & BANTUAN) ---------- */
+    .side-panel {
+      position: fixed;
+      top: 78px;
+      right: 40px;
+      width: 360px;
+      max-width: 90vw;
+      background: linear-gradient(to bottom, #5b3003, #f47b16);
+      border-radius: 18px;
+      padding: 16px 16px 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      transform: translateX(120%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      z-index: 20;
+      color: #fff;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .side-panel.open {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .side-panel-header {
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      font-family: "Libre Baskerville", serif;
+    }
+
+    .help-search {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .help-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      color: #fff;
+      font-size: 14px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .help-search input::placeholder {
+      color: #fff;
+      opacity: 0.9;
+    }
+
+    .help-popular-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .help-popular-list {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notif-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .notif-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 8px 10px;
+    }
+
+    .notif-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: #fffbf2;
+      color: var(--orange-dark);
+      font-size: 18px;
+    }
+
+    .notif-text {
+      font-size: 13px;
+    }
+
+    .notif-text b {
+      display: block;
+      font-size: 13px;
+    }
+
+    .notif-badge {
+      align-self: flex-start;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: #fffbf2;
+      color: var(--orange-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ---------- MODAL LOGOUT ---------- */
+    .logout-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 30;
+    }
+
+    .logout-modal-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .logout-modal {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px 28px 18px;
+      min-width: 260px;
+      max-width: 90vw;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    .logout-modal p {
+      font-family: "Libre Baskerville", serif;
+      font-size: 18px;
+      margin-bottom: 18px;
+      color: var(--text-dark);
+    }
+
+    .logout-modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .logout-btn-yes,
+    .logout-btn-cancel {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .logout-btn-yes {
+      background: var(--orange-dark);
+      color: #fff;
+    }
+
+    .logout-btn-cancel {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    /* ---------- RESPONSIVE SEDIKIT ---------- */
+    @media (max-width: 900px) {
+      .page {
+        grid-template-columns: 250px minmax(0, 1fr);
+        padding: 0 14px 90px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      header {
+        padding: 10px 16px;
+      }
+      nav {
+        display: none;
+      }
+      .page {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .sidebar {
+        display: none;
+      }
+      .side-panel {
+        right: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <img src="LOFU KACA PEMBESAR.png" alt="Logo Lost &amp; Found">
+      </div>
+      <span>Lost &amp; Found</span>
+    </div>
+
+    <nav>
+      <a href="Beranda kalo udah Login.html">BERANDA</a>
+      <a href="#">TENTANG KAMI</a>
+      <a href="Akun saya.html">AKUN SAYA</a>
+    </nav>
+
+    <div class="nav-right">
+      <button class="icon-btn" id="notif-btn" title="Notifikasi">🔔</button>
+      <button class="icon-btn" id="help-btn" title="Pusat Bantuan">?</button>
+      <div class="logout" id="logout-btn">LOG OUT</div>
+    </div>
+  </header>
+
+  <!-- LAYOUT UTAMA -->
+  <div class="page">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="profile-card">
+        <div class="profile-avatar">
+          <img src="Alya pfp.jpg" alt="Foto profil Alya Shafa Firdaus" />
+        </div>
+        <div class="profile-name">Alya Shafa Firdaus</div>
+        <div class="profile-id">NIM I710624024</div>
+        <div class="profile-major">S1 Bisnis Digital</div>
+      </div>
+
+      <div class="chat-list">
+        <div class="chat-item active">
+          <div class="chat-avatar">
+            <img src="Gea pfp.jpg" alt="Gea" />
+          </div>
+          <div class="chat-name">Geamanda Putri</div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar">
+            <img src="ALEXII.jpg" alt="Alexi" />
+          </div>
+          <div class="chat-name">Alexi Ramadan</div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar">
+            <img src="Amanda Monopo.jpg" alt="Amanda" />
+          </div>
+          <div class="chat-name">Amanda Manopo</div>
+        </div>
+        <div class="chat-item">
+          <div class="chat-avatar">
+            <img src="jennie.jpg" alt="Jenny" />
+          </div>
+          <div class="chat-name">Jennie Ruby</div>
+        </div>
+      </div>
+
+      <div class="sidebar-scroll-indicator">⌄</div>
+    </aside>
+
+    <!-- AREA CHAT -->
+    <section class="chat-wrapper">
+      <div class="found-card">
+        <div class="found-avatar">
+          <img src="Gea pfp.jpg" alt="Gea" />
+        </div>
+        <div class="found-info">
+          <div class="found-owner">@Fungky • Geamanda</div>
+          <div class="found-small-card">
+            <b>FOUND</b><br />
+            Jenis Barang&nbsp;&nbsp;&nbsp;&nbsp;: Pulpen hitam<br />
+            Lokasi&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Gedung Raden Ajeng Kartini<br />
+            Karakteristik : Berwarna hitam, berat saat dipakai
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-body" id="chat-body">
+        <div class="message me">
+          Halo Ka Gea!!!
+          <div class="message-time">09.10</div>
+        </div>
+        <div class="message me">
+          Aku Alya pemilik barang yang kamu udah temuin
+          <div class="message-time">09.11</div>
+        </div>
+        <div class="message me">
+          Untuk pengambilan nya besok bisa ga yaa ka?
+          <div class="message-time">09.25</div>
+        </div>
+        <div class="message other">
+          Hi Alya, barang kamu masih aku keep yaa
+          <div class="message-time">09.20</div>
+        </div>
+        <div class="message other">
+          Untuk pengambilan nya, kita bisa set tempat di kampus yaa
+          <div class="message-time">09.20</div>
+        </div>
+        <div class="message other">
+          Bisa koo, besok yaa di Blok M, jam makan siang
+          <div class="message-time">09.25</div>
+        </div>
+      </div>
+
+      <div class="chat-input-wrap">
+        <form id="chat-form" class="chat-input-row">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Ketik Pesan"
+            autocomplete="off"
+          />
+          <button type="submit" class="send-btn" title="Kirim">➤</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- PUSAT BANTUAN -->
+  <div class="side-panel" id="help-panel">
+    <div class="side-panel-header">PUSAT BANTUAN</div>
+    <div class="help-search">
+      <span>🔍</span>
+      <input
+        type="text"
+        placeholder="Mencari Pertanyaan"
+        id="help-search-input"
+      />
+    </div>
+    <div class="help-popular-title">Topik Populer :</div>
+    <div class="help-popular-list">
+      • Cara Delete Postingan<br />
+      • Cara Reset Password<br />
+      • Cara Ubah Profile.
+    </div>
+  </div>
+
+  <!-- NOTIFIKASI -->
+  <div class="side-panel" id="notif-panel">
+    <div class="side-panel-header">NOTIFIKASI</div>
+    <div class="notif-list">
+      <div class="notif-item">
+        <div class="notif-icon-wrap">✉️</div>
+        <div class="notif-text">
+          <b>Albert Einstein</b>
+          baru saja mengunggah laporan barang hilang.
+          <i>Cek apakah itu barangmu!</i>
+        </div>
+        <div class="notif-badge">1</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon-wrap">✉️</div>
+        <div class="notif-text">
+          <b>Haruto</b>
+          menambahkan barang ditemukan. Yuk, lihat detailnya siapa tahu punyamu!
+        </div>
+        <div class="notif-badge">1</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon-wrap">✉️</div>
+        <div class="notif-text">
+          <b>Info</b>
+          Ada postingan baru di Lost &amp; Found. Jangan sampai ketinggalan,
+          <i>bisa jadi barangmu ada di sana.</i>
+        </div>
+        <div class="notif-badge">1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR BAWAH -->
+  <div class="bottom-nav">
+    <!-- + : ke Uploading page -->
+    <button
+      title="Tambah Posting"
+      onclick="window.location.href='Uploading page.html'">
+      ＋
+    </button>
+
+    <button
+      class="home"
+      title="Beranda"
+      onclick="window.location.href='Beranda kalo udah Login.html'">
+      🏠
+    </button>
+
+    <button title="Room Chat" class="active">💬</button>
+
+    <button
+      title="Profil"
+      onclick="window.location.href='Akun saya.html'">
+      👤
+    </button>
+  </div>
+
+  <!-- MODAL LOGOUT -->
+  <div class="logout-modal-backdrop" id="logout-modal">
+    <div class="logout-modal">
+      <p>Apakah kamu yakin ingin logout?</p>
+      <div class="logout-modal-actions">
+        <button class="logout-btn-yes" id="logout-yes">YA</button>
+        <button class="logout-btn-cancel" id="logout-cancel">BATAL</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // CHAT
+    const chatBody = document.getElementById("chat-body");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+
+    if (chatBody) {
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function addMessage(text, sender = "me") {
+      if (!text.trim()) return;
+
+      const msg = document.createElement("div");
+      msg.className = "message " + (sender === "me" ? "me" : "other");
+      msg.innerHTML =
+        text +
+        '<div class="message-time">' +
+        new Date().toLocaleTimeString("id-ID", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }) +
+        "</div>";
+
+      chatBody.appendChild(msg);
+      chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    if (chatForm) {
+      chatForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const value = chatInput.value;
+        if (!value.trim()) return;
+        addMessage(value, "me");
+        chatInput.value = "";
+
+        setTimeout(() => {
+          addMessage("aman azah, sampai ketemu besok yaa", "other");
+        }, 800);
+      });
+    }
+
+    // PANEL NOTIF & BANTUAN
+    const notifBtn = document.getElementById("notif-btn");
+    const helpBtn = document.getElementById("help-btn");
+    const notifPanel = document.getElementById("notif-panel");
+    const helpPanel = document.getElementById("help-panel");
+
+    function closePanels() {
+      notifPanel.classList.remove("open");
+      helpPanel.classList.remove("open");
+    }
+
+    if (notifBtn) {
+      notifBtn.addEventListener("click", () => {
+        const willOpen = !notifPanel.classList.contains("open");
+        closePanels();
+        if (willOpen) notifPanel.classList.add("open");
+      });
+    }
+
+    if (helpBtn) {
+      helpBtn.addEventListener("click", () => {
+        const willOpen = !helpPanel.classList.contains("open");
+        closePanels();
+        if (willOpen) helpPanel.classList.add("open");
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      const clickInsidePanel =
+        notifPanel.contains(e.target) ||
+        helpPanel.contains(e.target) ||
+        notifBtn.contains(e.target) ||
+        helpBtn.contains(e.target);
+
+      if (!clickInsidePanel) {
+        closePanels();
+      }
+    });
+
+    // MODAL LOGOUT CUSTOM
+    const logoutBtn = document.getElementById("logout-btn");
+    const logoutModal = document.getElementById("logout-modal");
+    const logoutYes = document.getElementById("logout-yes");
+    const logoutCancel = document.getElementById("logout-cancel");
+
+    if (logoutBtn && logoutModal && logoutYes && logoutCancel) {
+      logoutBtn.addEventListener("click", () => {
+        logoutModal.classList.add("show");
+      });
+
+      logoutYes.addEventListener("click", () => {
+        window.location.href = "Beranda belum Login - copy.html";
+      });
+
+      logoutCancel.addEventListener("click", () => {
+        logoutModal.classList.remove("show");
+      });
+
+      logoutModal.addEventListener("click", (e) => {
+        if (e.target === logoutModal) {
+          logoutModal.classList.remove("show");
+        }
+      });
+    }
+  </script>
+</body>
+</html>

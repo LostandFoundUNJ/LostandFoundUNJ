@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lost &amp; Found — Tentang Kami</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --deep-orange:#a04000;
+      --orange:#e67e22;
+      --orange2:#d35400;
+      --soft-cream:#fff7e0;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:'Libre Baskerville',serif;
+      background:#f1f1f1;
+      color:#4a2815;
+    }
+
+    /* ================== TOP BAR ================== */
+    .top-bar{
+      width:100%;
+      height:110px;
+      background:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 40px;
+      box-shadow:0 2px 6px rgba(0,0,0,.15);
+      position:sticky;
+      top:0;
+      z-index:50;
+    }
+    .logo-wrap{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .logo-wrap img{
+      height:90px;
+      width:auto;
+    }
+    .logo-text{
+      font-size:24px;
+      font-weight:700;
+      color:var(--deep-orange);
+    }
+
+    .nav-main{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:22px;
+      font-weight:700;
+      font-size:15px;
+      color:var(--deep-orange);
+      position:relative;
+    }
+    .nav-link{
+      text-decoration:none;
+      color:var(--deep-orange);
+      letter-spacing:1px;
+    }
+    .nav-link.active{
+      text-decoration:underline;
+      text-underline-offset:4px;
+    }
+    .nav-icon{
+      font-size:22px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .logout-btn{
+      border:none;
+      background:transparent;
+      font-size:15px;
+      font-weight:700;
+      color:var(--deep-orange);
+      cursor:pointer;
+    }
+
+    /* ================== POPUP NOTIF ================== */
+    .notif-popup{
+      position:absolute;
+      top:70px;
+      right:110px;
+      width:340px;
+      background:linear-gradient(180deg,#ffa94a,#e46a16);
+      border-radius:16px;
+      padding:14px 14px 12px;
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+      display:none;
+      color:#4a2815;
+      z-index:60;
+    }
+    .notif-title{
+      font-weight:900;
+      font-size:18px;
+      color:#fff;
+      margin-bottom:10px;
+    }
+    .notif-box{
+      background:#fff7e6;
+      border-radius:8px;
+      padding:8px 10px;
+      font-size:12px;
+      margin-bottom:6px;
+    }
+
+    /* ================== POPUP FAQ ================== */
+    .faq-popup{
+      position:absolute;
+      top:70px;
+      right:40px;
+      width:340px;
+      background:linear-gradient(180deg,#ffa94a,#e46a16);
+      border-radius:16px;
+      padding:14px 14px 12px;
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+      display:none;
+      color:#fff;
+      z-index:60;
+    }
+    .faq-title{
+      font-weight:900;
+      font-size:18px;
+      margin-bottom:10px;
+    }
+    .faq-search{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      background:#fff;
+      border-radius:6px;
+      padding:8px;
+    }
+    .faq-search input{
+      border:none;
+      outline:none;
+      width:100%;
+      font-size:13px;
+      font-family:'Libre Baskerville',serif;
+    }
+    .faq-popular{
+      margin-top:10px;
+      font-size:12px;
+      background:rgba(0,0,0,.1);
+      padding:8px;
+      border-radius:6px;
+    }
+
+    /* ================== LOGOUT MODAL ================== */
+    .modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:80;
+    }
+    .modal-box{
+      background:#fff;
+      border-radius:18px;
+      padding:24px 30px 20px;
+      max-width:360px;
+      text-align:center;
+      box-shadow:0 10px 30px rgba(0,0,0,.4);
+    }
+    .modal-box p{
+      font-size:18px;
+      margin-bottom:20px;
+    }
+    .modal-actions{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+    }
+    .btn-ya,
+    .btn-batal{
+      border:none;
+      border-radius:10px;
+      padding:10px 26px;
+      font-weight:700;
+      cursor:pointer;
+      font-size:14px;
+    }
+    .btn-ya{
+      background:#e67e22;
+      color:#fff;
+    }
+    .btn-batal{
+      background:#ddd;
+      color:#333;
+    }
+
+    /* ================== MAIN WRAPPER ================== */
+    .main-wrap{
+      background:linear-gradient(90deg,#f39c3b,#d8671d);
+      padding:32px 40px 80px;
+    }
+
+    .content-row{
+      max-width:1320px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1.1fr 1.4fr;
+      gap:24px;
+    }
+
+    /* ================== LEFT PANEL (TENTANG KAMI) ================== */
+    .about-card{
+      background:#f58d30;
+      border-radius:26px;
+      padding:32px 30px 30px;
+      color:#fff;
+      box-shadow:0 10px 26px rgba(0,0,0,.35);
+    }
+    .about-title{
+      font-size:38px;
+      font-weight:900;
+      text-align:center;
+      letter-spacing:2px;
+      line-height:1.1;
+      margin-bottom:20px;
+    }
+    .about-text{
+      font-size:15px;
+      line-height:1.7;
+      margin-bottom:26px;
+    }
+
+    .block-heading{
+      background:#ea6e13;
+      padding:10px 16px;
+      border-radius:16px 16px 0 0;
+      font-size:26px;
+      font-weight:900;
+      text-align:center;
+      letter-spacing:2px;
+    }
+    .block-body{
+      background:#f7b46a;
+      border-radius:0 0 16px 16px;
+      padding:18px 18px 20px;
+      font-size:14px;
+      line-height:1.7;
+      margin-bottom:18px;
+    }
+
+    /* ================== RIGHT: TEAM CARDS ================== */
+    .team-area{
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .team-card{
+      background:#ffe8c5;
+      border-radius:18px;
+      box-shadow:0 10px 22px rgba(0,0,0,.35);
+      padding:14px 16px 16px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .team-role{
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:1px;
+      text-transform:uppercase;
+      color:#a04000;
+    }
+    .team-name{
+      font-size:14px;
+      font-weight:700;
+    }
+
+    .photo-space{
+      margin-top:4px;
+      width:100%;
+      height:150px;
+      border-radius:14px;
+      border:2px dashed rgba(0,0,0,.25);
+      background:rgba(255,255,255,.65);
+      overflow:hidden;           /* biar foto nggak keluar kotak */
+    }
+    .photo-space img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      border-radius:inherit;
+      display:block;
+    }
+
+    /* card CEO besar -> direvisi supaya tidak melebar */
+    .team-card.ceo{
+      padding:18px 22px 20px;
+      max-width:360px;       /* batasi lebar supaya sama seperti card lain */
+      width:100%;
+      align-self:center;     /* center di dalam .team-area (flex column) */
+      margin:0;              /* hapus margin default */
+    }
+    .team-card.ceo .photo-space{
+      height:200px;
+    }
+    .team-card.ceo .team-role{
+      font-size:18px;
+    }
+    /* Pastikan foto CEO selalu center */
+    .team-card.ceo .photo-space img{
+      object-position:center;
+    }
+
+    /* grid 6 card di bawah */
+    .team-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+
+    /* ================== FOOTER ================== */
+    footer{
+      background:#ffffff;
+      padding:18px 52px 20px;
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      border-top:5px solid #e87922;
+    }
+
+    .footer-left{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .footer-left img{
+      height:70px;
+    }
+    .footer-left span{
+      font-size:24px;
+      font-weight:700;
+      color:var(--deep-orange);
+    }
+
+    .footer-center{
+      text-align:center;
+      font-size:14px;
+      color:#a04000;
+    }
+    .footer-center strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:16px;
+    }
+
+    .footer-right{
+      text-align:right;
+      font-size:14px;
+      color:#a04000;
+    }
+    .footer-right-title{
+      font-weight:700;
+      margin-bottom:4px;
+      font-size:16px;
+    }
+
+    /* ============== RESPONSIVE ============== */
+    @media(max-width:1100px){
+      .content-row{
+        grid-template-columns:1fr;
+      }
+      /* kalau jadi column, pastikan CEO card tetap ukuran wajar */
+      .team-card.ceo{
+        max-width:420px;
+      }
+    }
+    @media(max-width:768px){
+      .top-bar{padding:0 16px;}
+      .nav-main{gap:14px;font-size:13px;}
+      .main-wrap{padding:24px 16px 60px;}
+      .team-grid{grid-template-columns:1fr 1fr;}
+      footer{
+        flex-direction:column;
+        gap:12px;
+        align-items:flex-start;
+      }
+    }
+    @media(max-width:520px){
+      .team-grid{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <header class="top-bar">
+    <div class="logo-wrap">
+      <img src="LOFU KACA PEMBESAR.png" alt="Lost &amp; Found Logo">
+      <span class="logo-text">Lost &amp; Found</span>
+    </div>
+
+    <nav class="nav-main">
+      <a href="Beranda kalo udah Login.html" class="nav-link">BERANDA</a>
+      <a href="Akun saya.html" class="nav-link">AKUN SAYA</a>
+
+      <span id="notifBtn" class="nav-icon">🔔</span>
+      <span id="faqBtn" class="nav-icon">❓</span>
+      <button id="logoutBtn" class="logout-btn">LOG OUT</button>
+
+      <!-- POPUP NOTIF -->
+      <div id="notifPopup" class="notif-popup">
+        <div class="notif-title">NOTIFIKASI</div>
+        <div class="notif-box">
+          Albert Einstein baru saja mengunggah laporan barang hilang.
+        </div>
+        <div class="notif-box">
+          Haruto menambahkan barang ditemukan. Yuk, cek apakah itu barangmu!
+        </div>
+        <div class="notif-box">
+          Ada postingan baru di Lost &amp; Found. Jangan sampai ketinggalan,
+          bisa jadi barangmu ada di sana.
+        </div>
+      </div>
+
+      <!-- POPUP FAQ -->
+      <div id="faqPopup" class="faq-popup">
+        <div class="faq-title">PUSAT BANTUAN</div>
+        <div class="faq-search">
+          <span style="font-size:18px;">🔎</span>
+          <input id="faqInput" placeholder="Mencari Pertanyaan" />
+        </div>
+        <div class="faq-popular">
+          <strong>Topik Populer :</strong><br>
+          Cara Delete Postingan, Cara Reset Password, Cara Ubah Profil.
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MODAL LOGOUT -->
+  <div id="logoutModal" class="modal-overlay">
+    <div class="modal-box">
+      <p>Apakah kamu yakin ingin logout?</p>
+      <div class="modal-actions">
+        <button class="btn-ya" id="logoutYes">YA</button>
+        <button class="btn-batal" id="logoutNo">BATAL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main-wrap">
+    <div class="content-row">
+
+      <!-- KIRI: TENTANG KAMI + VISI MISI -->
+      <section class="about-card">
+        <h1 class="about-title">TENTANG KAMI<br>VISI &amp; MISI</h1>
+
+        <p class="about-text">
+          Lost &amp; Found adalah platform digital yang dirancang untuk membantu Mahasiswa,
+          Dosen, dan seluruh Civitas Akademika FEB UNJ dalam menemukan dan melaporkan
+          barang yang hilang secara cepat, mudah, dan terstruktur.
+        </p>
+
+        <div class="visi-block">
+          <div class="block-heading">VISI</div>
+          <div class="block-body">
+            Menjadi platform digital terpercaya yang mampu menghadirkan solusi inovatif dalam
+            mengelola barang-barang yang hilang dan temuan, serta menciptakan ekosistem kampus
+            yang aman, tertib, dan inklusif.
+          </div>
+        </div>
+
+        <div class="misi-block">
+          <div class="block-heading">MISI</div>
+          <div class="block-body">
+            Menghadirkan sistem informasi lost &amp; found berbasis teknologi digital yang mudah
+            digunakan dan terintegrasi. Menyediakan fitur pencarian dan temuan yang efisien
+            untuk mempercepat proses pengembalian barang.
+          </div>
+        </div>
+      </section>
+
+      <!-- KANAN: TEAM 7 CARD -->
+      <section class="team-area">
+
+        <!-- CEO CARD BESAR (DIBATASI UKURANNYA) -->
+        <article class="team-card ceo">
+          <div class="team-role">CHIEF EXECUTIVE OFFICER</div>
+          <div class="team-name">Geamanda Pungky Putri</div>
+          <div class="photo-space">
+            <!-- Ganti src dengan file foto CEO -->
+            <img src="geak.jpg" alt="Geamanda Pungky Putri">
+          </div>
+        </article>
+
+        <!-- 6 CARD DI BAWAH -->
+        <div class="team-grid">
+          <article class="team-card">
+            <div class="team-role">CHIEF OPERATING OFFICER</div>
+            <div class="team-name">Elang Asmasutrisno</div>
+            <div class="photo-space">
+              <img src="elangs.png" alt="Elang Asmasutrisno">
+            </div>
+          </article>
+
+          <article class="team-card">
+            <div class="team-role">CHIEF DESIGN OFFICER</div>
+            <div class="team-name">Denny Darmawan</div>
+            <div class="photo-space">
+              <img src="dennny.jpg" alt="Denny Darmawan">
+            </div>
+          </article>
+
+          <article class="team-card">
+            <div class="team-role">CHIEF TECHNOLOGY OFFICER</div>
+            <div class="team-name">Alya Shafa Firdaus</div>
+            <div class="photo-space">
+              <img src="aalee.jpg" alt="Alya Shafa Firdaus">
+            </div>
+          </article>
+
+          <article class="team-card">
+            <div class="team-role">CHIEF OPERATING OFFICER</div>
+            <div class="team-name">Seli Mardiana</div>
+            <div class="photo-space">
+              <img src="sely.jpg" alt="Seli Mardiana">
+            </div>
+          </article>
+
+          <article class="team-card">
+            <div class="team-role">CHIEF DESIGN OFFICER</div>
+            <div class="team-name">Diva Savitri</div>
+            <div class="photo-space">
+              <img src="dipa.jpg" alt="Diva Savitri">
+            </div>
+          </article>
+
+          <article class="team-card">
+            <div class="team-role">CHIEF TECHNOLOGY OFFICER</div>
+            <div class="team-name">Nenden Aisha</div>
+            <div class="photo-space">
+              <img src="nenden.jpg" alt="Nenden Aisha">
+            </div>
+          </article>
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">
+      <img src="LOFU KACA PEMBESAR.png" alt="Logo Lost &amp; Found">
+      <span>Lost &amp; Found</span>
+    </div>
+
+    <div class="footer-center">
+      <strong>Temukan, Kembalikan, &amp; Terhubung</strong>
+      &copy; 2025 - Universitas Negeri Jakarta. All rights reserved.
+    </div>
+
+    <div class="footer-right">
+      <div class="footer-right-title">Kontak</div>
+      Jl. Rawamangun, Jakarta Timur<br>
+      Universitas Negeri Jakarta.<br>
+      (+6221) 47882394
+    </div>
+  </footer>
+
+  <script>
+    // ---------- POPUP NOTIF ----------
+    const notifBtn   = document.getElementById('notifBtn');
+    const notifPopup = document.getElementById('notifPopup');
+    const faqBtn     = document.getElementById('faqBtn');
+    const faqPopup   = document.getElementById('faqPopup');
+
+    notifBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      faqPopup.style.display = 'none';
+      notifPopup.style.display = (notifPopup.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // ---------- POPUP FAQ ----------
+    faqBtn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      notifPopup.style.display = 'none';
+      faqPopup.style.display = (faqPopup.style.display === 'block') ? 'none' : 'block';
+    });
+
+    // klik di luar nutup popup
+    document.addEventListener('click', ()=>{
+      notifPopup.style.display = 'none';
+      faqPopup.style.display   = 'none';
+    });
+
+    // supaya klik di dalam popup tidak menutup
+    notifPopup.addEventListener('click', e=>e.stopPropagation());
+    faqPopup.addEventListener('click', e=>e.stopPropagation());
+
+    // FAQ suggestion sederhana
+    const faqInput = document.getElementById('faqInput');
+    const faqPopularP = document.querySelector('.faq-popular');
+    if(faqInput && faqPopularP){
+      faqInput.addEventListener('input', (e)=>{
+        const val = e.target.value.toLowerCase();
+        if(!val){
+          faqPopularP.innerHTML =
+            '<strong>Topik Populer :</strong><br>Cara Delete Postingan, Cara Reset Password, Cara Ubah Profil.';
+        }else if(val.includes('password')){
+          faqPopularP.innerHTML =
+            'Reset password: masuk ke halaman login &gt; klik "Lupa Password" &gt; cek email kampus.';
+        }else if(val.includes('hapus') || val.includes('delete')){
+          faqPopularP.innerHTML =
+            'Hapus postingan: buka detail posting &gt; pilih menu titik tiga &gt; pilih "Delete".';
+        }else{
+          faqPopularP.innerHTML = 'Tidak menemukan topik. Coba kata kunci lain.';
+        }
+      });
+    }
+
+    // ---------- LOGOUT MODAL ----------
+    const logoutBtn   = document.getElementById('logoutBtn');
+    const logoutModal = document.getElementById('logoutModal');
+    const logoutYes   = document.getElementById('logoutYes');
+    const logoutNo    = document.getElementById('logoutNo');
+
+    logoutBtn.addEventListener('click', ()=>{
+      logoutModal.style.display = 'flex';
+    });
+
+    logoutNo.addEventListener('click', ()=>{
+      logoutModal.style.display = 'none';
+    });
+
+    logoutYes.addEventListener('click', ()=>{
+      // arahkan ke halaman login saat logout — ganti sesuai file tujuanmu
+      window.location.href = 'Beranda belum Login - Copy.html';
+    });
+
+    // klik luar modal untuk tutup
+    logoutModal.addEventListener('click', (e)=>{
+      if(e.target === logoutModal){
+        logoutModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lost & Found - Upload Barang</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --deep-orange:#a04000;
+      --orange-light: #ffd27a;
+      --orange: #f7a527;
+      --orange-dark: #f47b16;
+      --bg-grad-start:#e8731f;
+      --bg-grad-end:#c5451f;
+      --text-dark: #3d2200;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(135deg, var(--bg-grad-start), var(--bg-grad-end));
+      color: var(--text-dark);
+    }
+
+    /* ---------- HEADER / NAVBAR ---------- */
+    header {
+      display: flex;
+      align-items: center;
+      padding: 10px 40px;
+      background: #ffffff;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      font-family: "Libre Baskerville", serif;
+      color: var(--deep-orange);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--deep-orange);
+      margin-right: 60px;
+    }
+
+    .brand-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #fff, #ffb24a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .brand-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 999px;
+      display: block;
+    }
+
+    nav {
+      display: flex;
+      gap: 60px;
+      margin-left: 80px;
+      font-size: 16px; /* dikecilin sedikit */
+      font-weight: 700;
+      letter-spacing: 0.07em;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #c94a09;
+      text-shadow: 0 3px 4px rgba(0,0,0,0.25);
+    }
+
+    .nav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-family: "Libre Baskerville", serif;
+    }
+
+    .icon-circle {
+      width: 46px;
+      height: 46px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #f6b432;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #fff;
+      box-shadow: 0 4px 7px rgba(0, 0, 0, 0.2);
+    }
+
+    .logout {
+      font-weight: 700;
+      color: #b34216;
+      cursor: pointer;
+      letter-spacing: 0.08em;
+      font-size: 18px;
+    }
+
+    /* ---------- MAIN AREA ---------- */
+    .page {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 16px 110px;
+    }
+
+    .upload-card {
+      width: min(1000px, 100%);
+      background: #fffdf7;
+      border-radius: 26px;
+      padding: 26px 26px 22px;
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.25);
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .upload-card-header {
+      grid-column: 1 / -1;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .upload-card-header h1 {
+      font-family: "Libre Baskerville", serif;
+      font-size: 24px;
+      color: var(--deep-orange);
+      margin-bottom: 4px;
+    }
+
+    .upload-card-header p {
+      font-size: 13px;
+      color: #7a5a38;
+    }
+
+    /* LEFT: FORM */
+    .upload-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-right: 10px;
+      border-right: 1px dashed rgba(0,0,0,0.1);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 14px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: #5b3921;
+    }
+
+    .form-input,
+    .form-textarea {
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.12);
+      padding: 8px 10px;
+      font-family: "Poppins", sans-serif;
+      font-size: 14px;
+      outline: none;
+      background: #fffdf9;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--orange-dark);
+      box-shadow: 0 0 0 2px rgba(244,123,22,0.25);
+    }
+
+    .form-textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .submit-wrap {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .submit-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f7a527, #f47b16);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    /* RIGHT: FOTO */
+    .upload-photo-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .photo-preview {
+      width: 100%;
+      max-width: 280px;
+      aspect-ratio: 4 / 3;
+      border-radius: 18px;
+      border: 2px dashed rgba(0,0,0,0.15);
+      background: #fffaf3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .photo-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .photo-preview-empty {
+      text-align: center;
+      color: #b58a5c;
+      font-size: 13px;
+      padding: 0 14px;
+    }
+
+    .photo-preview-empty span {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .photo-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .photo-upload-btn,
+    .photo-cancel-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+
+    .photo-upload-btn {
+      background: #f6b432;
+      color: #fff;
+    }
+
+    .photo-cancel-btn {
+      background: #e0e0e0;
+      color: #444;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #8a6a47;
+      text-align: center;
+    }
+
+    #photo-input {
+      display: none;
+    }
+
+    /* ---------- NAVBAR BAWAH ---------- */
+    .bottom-nav-container {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .bottom-nav {
+      pointer-events: auto;
+      margin-bottom: 10px;
+      padding: 8px 24px;
+      background: #ffffff;
+      border-radius: 30px 30px 0 0;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.3);
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .bottom-nav button {
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      background: #c94a09;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      transition: 0.2s;
+      color: #fff;
+    }
+
+    .bottom-nav button.active {
+      background: #b34216;
+      transform: translateY(-3px) scale(1.03);
+    }
+
+    /* ---------- SIDE PANEL (NOTIF & BANTUAN) ---------- */
+    .side-panel {
+      position: fixed;
+      top: 80px;
+      right: 40px;
+      width: 360px;
+      max-width: 90vw;
+      background: linear-gradient(to bottom, #ffb24a, #f47b16);
+      border-radius: 18px;
+      padding: 16px 16px 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      transform: translateX(120%);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      z-index: 20;
+      color: #fff;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .side-panel.open {
+      transform: translateX(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .side-panel-header {
+      font-weight: 800;
+      font-size: 20px;
+      margin-bottom: 12px;
+      letter-spacing: 0.05em;
+      font-family: "Libre Baskerville", serif;
+    }
+
+    .help-search {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 10px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .help-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      color: #fff;
+      font-size: 14px;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .help-search input::placeholder {
+      color: #fff;
+      opacity: 0.9;
+    }
+
+    .help-popular-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .help-popular-list {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .notif-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .notif-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-size: 13px;
+    }
+
+    .notif-icon-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: #fffbf2;
+      color: #f47b16;
+      font-size: 18px;
+    }
+
+    .notif-badge {
+      align-self: flex-start;
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: #fffbf2;
+      color: #f47b16;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    /* ---------- MODAL LOGOUT ---------- */
+    .logout-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 30;
+    }
+
+    .logout-modal-backdrop.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .logout-modal {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px 28px 18px;
+      min-width: 260px;
+      max-width: 90vw;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    .logout-modal p {
+      font-family: "Libre Baskerville", serif;
+      font-size: 12px;
+      margin-bottom: 12px;
+      color: var(--text-dark);
+    }
+
+    .logout-modal-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .logout-btn-yes,
+    .logout-btn-cancel {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 22px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: "Poppins", sans-serif;
+    }
+
+    .logout-btn-yes {
+      background: var(--orange-dark);
+      color: #fff;
+    }
+
+    .logout-btn-cancel {
+      background: #e0e0e0;
+      color: #333;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 900px) {
+      .upload-card {
+        grid-template-columns: 1fr;
+      }
+      .upload-form {
+        border-right: none;
+        border-bottom: 1px dashed rgba(0,0,0,0.1);
+        padding-right: 0;
+        padding-bottom: 14px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      header {
+        padding: 10px 16px;
+      }
+      nav {
+        display: none;
+      }
+      .page {
+        padding-top: 24px;
+      }
+      .upload-card {
+        padding: 20px 18px 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <!-- ganti src dengan logo kamu -->
+        <img src="LOFU KACA PEMBESAR.png" alt="Logo Lost &amp; Found">
+      </div>
+      <span>Lost &amp; Found</span>
+    </div>
+
+    <nav>
+      <a href="Beranda kalo udah Login.html">BERANDA</a>
+      <a href="Tentang kami.html">TENTANG KAMI</a>
+      <a href="Akun saya.html">AKUN SAYA</a>
+    </nav>
+
+    <div class="nav-right">
+      <button class="icon-circle" id="notif-btn" title="Notifikasi">🔔</button>
+      <button class="icon-circle" id="help-btn" title="Pusat Bantuan">?</button>
+      <div class="logout" id="logout-btn">LOG OUT</div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <div class="page">
+    <div class="upload-card">
+      <div class="upload-card-header">
+        <h1>Upload Barang Ditemukan / Hilang</h1>
+        <p>Isi detail barang di sebelah kiri, lalu tambahkan foto barang di sebelah kanan.</p>
+      </div>
+
+      <!-- LEFT: FORM -->
+      <div class="upload-form">
+        <div class="form-group">
+          <label for="jenis">Jenis Barang</label>
+          <input type="text" id="jenis" class="form-input" placeholder="Contoh: Pulpen merk &quot;Skenownami&quot;">
+        </div>
+
+        <div class="form-group">
+          <label for="lokasi">Lokasi</label>
+          <input type="text" id="lokasi" class="form-input" placeholder="Contoh: Gedung B lama, lantai 2">
+        </div>
+
+        <div class="form-group">
+          <label for="karakteristik">Karakteristik</label>
+          <textarea id="karakteristik" class="form-textarea" placeholder="Contoh: Warna hitam, ujung silver, ada stiker kecil di badan pulpen."></textarea>
+        </div>
+
+        <div class="submit-wrap">
+          <button type="button" class="submit-btn" id="submit-report">Kirim Laporan</button>
+        </div>
+      </div>
+
+      <!-- RIGHT: FOTO -->
+      <div class="upload-photo-wrap">
+        <div class="photo-preview" id="photo-preview">
+          <img id="photo-preview-img" alt="Preview foto barang">
+          <div class="photo-preview-empty" id="photo-preview-empty">
+            <span>📷</span>
+            <div>Belum ada foto.<br>Silakan upload foto barang di sini.</div>
+          </div>
+        </div>
+
+        <div class="photo-actions">
+          <button class="photo-upload-btn" id="photo-upload-btn">Pilih Foto</button>
+          <button class="photo-cancel-btn" id="photo-reset-btn">Kembali</button>
+        </div>
+
+        <input type="file" id="photo-input" accept="image/*">
+
+        <div class="hint">Format: JPG/PNG • Disarankan foto jelas &amp; tidak blur.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PUSAT BANTUAN -->
+  <div class="side-panel" id="help-panel">
+    <div class="side-panel-header">PUSAT BANTUAN</div>
+    <div class="help-search">
+      <span>🔍</span>
+      <input
+        type="text"
+        placeholder="Mencari Pertanyaan"
+        id="help-search-input"
+      />
+    </div>
+    <div class="help-popular-title">Topik Populer :</div>
+    <div class="help-popular-list">
+      • Cara Delete Postingan<br />
+      • Cara Reset Password<br />
+      • Cara Ubah Profile.
+    </div>
+  </div>
+
+  <!-- NOTIFIKASI -->
+  <div class="side-panel" id="notif-panel">
+    <div class="side-panel-header">NOTIFIKASI</div>
+    <div class="notif-list">
+      <div class="notif-item">
+        <div class="notif-icon-wrap">✉️</div>
+        <div>
+          <b>Albert Einstein</b>
+          baru saja mengunggah laporan barang hilang.
+          <i>Cek apakah itu barangmu!</i>
+        </div>
+        <div class="notif-badge">1</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon-wrap">✉️</div>
+        <div>
+          <b>Haruto</b>
+          menambahkan barang ditemukan. Yuk, lihat detailnya siapa tahu punyamu!
+        </div>
+        <div class="notif-badge">1</div>
+      </div>
+      <div class="notif-item">
+        <div class="notif-icon-wrap">✉️</div>
+        <div>
+          <b>Info</b>
+          Ada postingan baru di Lost &amp; Found. Jangan sampai ketinggalan,
+          <i>bisa jadi barangmu ada di sana.</i>
+        </div>
+        <div class="notif-badge">1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR BAWAH -->
+  <div class="bottom-nav-container">
+    <div class="bottom-nav">
+      <!-- + : Uploading page (halaman ini) -->
+      <button
+        title="Tambah Posting"
+        class="active"
+        onclick="window.location.href='Uploading page.html'">
+        ＋
+      </button>
+
+      <button
+        title="Beranda"
+        onclick="window.location.href='Beranda kalo udah Login.html'">
+        🏠
+      </button>
+
+      <button
+        title="Room Chat"
+        onclick="window.location.href='ROOMCHAT.html'">
+        💬
+      </button>
+
+      <button
+        title="Profil"
+        onclick="window.location.href='Akun saya.html'">
+        👤
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL LOGOUT -->
+  <div class="logout-modal-backdrop" id="logout-modal">
+    <div class="logout-modal">
+      <p>Apakah kamu yakin ingin logout?</p>
+      <div class="logout-modal-actions">
+        <button class="logout-btn-yes" id="logout-yes">YA</button>
+        <button class="logout-btn-cancel" id="logout-cancel">BATAL</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // PREVIEW FOTO
+    const photoInput = document.getElementById("photo-input");
+    const photoPreviewImg = document.getElementById("photo-preview-img");
+    const photoPreviewEmpty = document.getElementById("photo-preview-empty");
+    const photoUploadBtn = document.getElementById("photo-upload-btn");
+    const photoResetBtn = document.getElementById("photo-reset-btn");
+
+    if (photoUploadBtn && photoInput) {
+      photoUploadBtn.addEventListener("click", () => {
+        photoInput.click();
+      });
+
+      photoInput.addEventListener("change", () => {
+        const file = photoInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          photoPreviewImg.src = e.target.result;
+          photoPreviewImg.style.display = "block";
+          photoPreviewEmpty.style.display = "none";
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // tombol Kembali: hapus foto & kembali ke state awal
+    if (photoResetBtn) {
+      photoResetBtn.addEventListener("click", () => {
+        if (photoInput) photoInput.value = "";
+        if (photoPreviewImg) {
+          photoPreviewImg.src = "";
+          photoPreviewImg.style.display = "none";
+        }
+        if (photoPreviewEmpty) {
+          photoPreviewEmpty.style.display = "block";
+        }
+      });
+    }
+
+    // KIRIM LAPORAN -> redirect ke Beranda kalo udah Login.html
+    const submitBtn = document.getElementById("submit-report");
+    if (submitBtn) {
+      submitBtn.addEventListener("click", () => {
+        // bisa ditambah validasi kalau mau
+        alert("Laporan berhasil dikirim!");
+        window.location.href = "Beranda kalo udah Login.html";
+      });
+    }
+
+    // PANEL NOTIF & BANTUAN
+    const notifBtn = document.getElementById("notif-btn");
+    const helpBtn = document.getElementById("help-btn");
+    const notifPanel = document.getElementById("notif-panel");
+    const helpPanel = document.getElementById("help-panel");
+
+    function closePanels() {
+      notifPanel.classList.remove("open");
+      helpPanel.classList.remove("open");
+    }
+
+    if (notifBtn) {
+      notifBtn.addEventListener("click", () => {
+        const willOpen = !notifPanel.classList.contains("open");
+        closePanels();
+        if (willOpen) notifPanel.classList.add("open");
+      });
+    }
+
+    if (helpBtn) {
+      helpBtn.addEventListener("click", () => {
+        const willOpen = !helpPanel.classList.contains("open");
+        closePanels();
+        if (willOpen) helpPanel.classList.add("open");
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      const clickInsidePanel =
+        notifPanel.contains(e.target) ||
+        helpPanel.contains(e.target) ||
+        (notifBtn && notifBtn.contains(e.target)) ||
+        (helpBtn && helpBtn.contains(e.target));
+
+      if (!clickInsidePanel) {
+        closePanels();
+      }
+    });
+
+    // MODAL LOGOUT
+    const logoutBtn = document.getElementById("logout-btn");
+    const logoutModal = document.getElementById("logout-modal");
+    const logoutYes = document.getElementById("logout-yes");
+    const logoutCancel = document.getElementById("logout-cancel");
+
+    if (logoutBtn && logoutModal && logoutYes && logoutCancel) {
+      logoutBtn.addEventListener("click", () => {
+        logoutModal.classList.add("show");
+      });
+
+      logoutYes.addEventListener("click", () => {
+        window.location.href = "Beranda belum Login - copy.html";
+      });
+
+      logoutCancel.addEventListener("click", () => {
+        logoutModal.classList.remove("show");
+      });
+
+      logoutModal.addEventListener("click", (e) => {
+        if (e.target === logoutModal) {
+          logoutModal.classList.remove("show");
+        }
+      });
+    }
+  </script>
+</body>
+</html>
